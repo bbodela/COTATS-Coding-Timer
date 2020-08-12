@@ -1,5 +1,7 @@
-
 # COTATS
+
+![image (1)](https://user-images.githubusercontent.com/59818904/89968304-78e59500-dc8e-11ea-899a-3f554ffba16d.png)
+
 공부 집중을 도와주는 웹페이지, COTATS입니다.
 
 COTATS는 Time과 Codestates에서 글자를 조합해 만들어졌습니다.
@@ -12,8 +14,9 @@ COTATS는 Time과 Codestates에서 글자를 조합해 만들어졌습니다.
 2. 우측에 햄버거 메뉴를 통해 나타나는 공부시간랭킹을 통해, 다른 사람이
    어느정도로 공부하는지 알 수 있습니다.
 
-#Getting Started
-- 추후 추가 예정
+# Wireframe
+<img width="988" alt="KakaoTalk_Photo_2020-08-12-11-24-07" src="https://user-images.githubusercontent.com/59818904/89968296-75520e00-dc8e-11ea-8b90-59a5632c9f2f.png">
+
 
 # Functional List
 - login 버튼을 통해 접속할 수 있습니다
