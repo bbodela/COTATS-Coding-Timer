@@ -1,5 +1,7 @@
 // signOut 기능을 할 수 있는 버튼을 여기에
 import React, { useState } from "react";
+import axios from "axios";
+
 import DisplayTimer from "Components/DisplayTimer";
 import Btn from "Components/Btn";
 import Hamburger from "Components/Hamburger";
@@ -45,6 +47,7 @@ function Timer() {
   const stop = () => {
     clearInterval(interv);
     setStatus(2);
+    postTime();
   };
   const open = () => {
     setMenuStatus(false);
@@ -52,11 +55,49 @@ function Timer() {
   const close = () => {
     setMenuStatus(true);
   };
+  const postTime = () => {
+    let today = `${new Date().getFullYear()}/${
+      new Date().getMonth() + 1
+    }/${new Date().getDate()}`;
+    console.log(`${time.h}:${time.m}:${time.s}`, today);
+
+    axios
+      .post("http://localhost:4000/timer", {
+        time: `${time.h}:${time.m}:${time.s}`,
+        day: today,
+        userId: 1,
+      })
+      .then((res) => {
+        console.log("timer부분 res", res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const refresh = () => {
+    axios
+      .get("http://localhost:4000/timer", {
+        params: { test: "gettest" },
+      })
+      .then((res) => {
+        console.log("refresh res test", res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return (
     <div className="Timer">
-      <Hamburger open={open} close={close} status={menuStatus} />
+      <Hamburger
+        open={open}
+        close={close}
+        status={menuStatus}
+        refresh={refresh}
+      />
       <DisplayTimer time={time} />
-      <Btn start={start} stop={stop} status={status} />
+      <Btn start={start} stop={stop} status={status} posttime={postTime} />
     </div>
   );
 }

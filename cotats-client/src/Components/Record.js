@@ -1,23 +1,38 @@
 import React from "react";
+import { fakedata } from "../fakedata/fakedata";
+
 const Record = (props) => {
+  let myData;
+  let index;
+  let rankingData = [];
+  for (let i = 0; i < props.fakedata.length; i += 1) {
+    if (fakedata[i].id === 4) {
+      myData = fakedata[i];
+    }
+  }
+  for (let i = 0; i < 10; i += 1) {
+    rankingData.push(fakedata[i]);
+  }
   return (
     <div>
       <div className="hamburgerMenuSide">
         <button className="closeBtn" onClick={props.open}>
           close
         </button>
-        <button className="refresh">*</button>
+        <button className="refresh" onClick={props.refresh}>
+          *
+        </button>
+        <div>{`${new Date().getMonth() + 1}/${new Date().getDate()}`}</div>
         <div className="mydata">
-          {/* <div>랭킹</div> */}
-          <div className="yesterday">{props.fakedata[0].day}</div>
-          <div className="mytime">{props.fakedata[0].time}</div>
-          <div className="ranking">{props.fakedata[0].id}</div>
+          <div className="myname">{myData.username}</div>
+          <div className="mytime">{myData.time}</div>
+          <div className="ranking">{myData.id}</div>
         </div>
         <div>
-          {props.fakedata.map((data) => {
+          {rankingData.map((data, index) => {
             return (
-              <ul>
-                <li>{data.id}</li>
+              <ul key={index}>
+                <li>{index + 1}</li>
                 <li>{data.username}</li>
                 <li>{data.time}</li>
               </ul>
