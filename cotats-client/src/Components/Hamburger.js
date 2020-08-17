@@ -6,7 +6,12 @@ function Hamburger(props) {
   return (
     <div className="sideMenu">
       {props.status === true ? (
-        <Record open={props.open} fakedata={fakedata} refresh={props.refresh} />
+        <Record
+          open={props.open}
+          fakedata={fakedata}
+          refresh={props.refresh}
+          handleLogoutChange={props.handleLogoutChange}
+        />
       ) : (
         ""
       )}

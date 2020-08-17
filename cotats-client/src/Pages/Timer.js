@@ -106,6 +106,7 @@ function Timer(props) {
             status={menuStatus}
             refresh={refresh}
             setIsLogin={props.setIsLogin}
+            handleLogoutChange={props.handleLogoutChange}
           />
           <DisplayTimer time={time} />
           <Btn start={start} stop={stop} status={status} posttime={postTime} />

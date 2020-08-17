@@ -21,8 +21,20 @@ class App extends Component {
   handleLoginChange = () => {
     const { isLogin } = this.state;
     this.setState({
-      isLogin: !isLogin,
+      isLogin: true,
     });
+  };
+  handleLogoutChange = () => {
+    const { isLogin } = this.state;
+    this.setState({
+      isLogin: false,
+    });
+  };
+  componentWillMount = () => {
+    const { isLogin } = this.state;
+    if (!isLogin) {
+      this.handleLoginChange();
+    }
   };
 
   render() {
@@ -48,6 +60,7 @@ class App extends Component {
               <SignIn
                 isLogin={isLogin}
                 handleLoginChange={() => this.handleLoginChange()}
+                handleLogoutChange={() => this.handleLogoutChange()}
               />
             )}
           />
@@ -56,7 +69,15 @@ class App extends Component {
             render={() => <SignUp isLogin={isLogin} />}
             this={this}
           />
-          <Route path="/timer" render={() => <Timer isLogin={isLogin} />} />
+          <Route
+            path="/timer"
+            render={() => (
+              <Timer
+                isLogin={isLogin}
+                handleLogoutChange={() => this.handleLogoutChange()}
+              />
+            )}
+          />
           <Footer />
           <Redirect from="*" to="/" />
         </BrowserRouter>
@@ -65,4 +86,5 @@ class App extends Component {
     );
   }
 }
+
 export default App;

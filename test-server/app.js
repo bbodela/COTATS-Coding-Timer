@@ -4,7 +4,9 @@ const cors = require("cors");
 const http = require("http").createServer(app);
 const port = 4000;
 const bodyParser = require("body-parser");
-const SocketIo = require("socket.io"); // 추가
+const session = require("express-session");
+const FileStore = require("session-file-store")(session);
+const io = require("socket.io"); // 추가
 const socketEvents = require("./socket.js"); // 추가
 const serverData = [
   {
@@ -23,6 +25,17 @@ const serverData = [
   },
 ];
 
+io.listen(80);
+io.sockets.on("connection", function (socket) {
+  // 클라이언트로 news 이벤트를 보낸다.
+  socket.emit("news", { hello: "world" });
+
+  // 클라이언트에서 my other event가 발생하면 데이터를 받는다.
+  socket.on("my other event", function (data) {
+    console.log(data);
+  });
+});
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
@@ -30,6 +43,15 @@ app.use(
     origin: ["http://localhost:3000"],
     method: ["GET", "POST"],
     credentials: true,
+  })
+);
+
+app.use(
+  session({
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: true,
+    store: new FileStore(),
   })
 );
 
@@ -44,7 +66,7 @@ app.get("/", (req, res) => {
 // });
 
 app.post("/timer", (req, res) => {
-  console.log("req.body check", req.body);
+  console.log("req.session check", req.session);
   res.send("response");
 });
 
@@ -75,3 +97,5 @@ app.post("/signup", (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
+
+//------------------------------------------

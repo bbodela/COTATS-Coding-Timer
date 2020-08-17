@@ -33,6 +33,7 @@ const Record = (props) => {
             onClick={props.refresh}
           />
         </Button>
+        <Button onClick={props.handleLogoutChange}>logout</Button>
 
         <div>{`${new Date().getMonth() + 1}/${new Date().getDate()}`}</div>
         <div className="mydata">
