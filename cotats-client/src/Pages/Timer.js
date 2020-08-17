@@ -41,10 +41,7 @@ function Timer(props) {
   };
   const start = () => {
     axios
-      .post("http://3.18.213.157:5000/timer", {
-        username: props.userinfo.username,
-        id: props.userinfo.id,
-      })
+      .post("http://3.18.213.157:5000/timer")
       .then((res) => {
         console.log("timer start부분 res", res);
       })
@@ -75,9 +72,9 @@ function Timer(props) {
     axios
       .post("http://3.18.213.157:5000/timer", {
         savetime: `${time.h}:${time.m}:${time.s}`,
-        username: props.userinfo.username,
-        day: today,
-        id: props.userinfo.id, //userid
+        // day: today,
+        // username: props.userinfo.username,
+        // id: props.userinfo.id, //userid
       })
       .then((res) => {
         console.log("timer stop부분 res expect:time,day,userId", res);
