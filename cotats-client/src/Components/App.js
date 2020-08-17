@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { BrowserRouter, Route, Redirect } from "react-router-dom";
-
 import Home from "Pages/Home";
 import SignIn from "Pages/SignIn";
 import SignUp from "Pages/SignUp";
@@ -12,47 +11,57 @@ import Axios from "axios";
 class App extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      isLogin: true,
-      userinfo: {
-        id: "1",
-        username: "동훈",
-        email: "test@",
-      },
+      isLogin: false,
     };
-    this.setIsLogin = this.setIsLogin.bind(this);
   }
-  setIsLogin() {
-    Axios.post(req, res);
 
-    // post: (req, res) => {
+  // handle login state
+  handleLoginChange = () => {
+    const { isLogin } = this.state;
+    this.setState({
+      isLogin: !isLogin,
+    });
+  };
 
-    //   req.session.destroy(() => req.session);
-    //   res.redirect("/");
-    // },
-  }
-  /*:
-   */
   render() {
-    const { isLogin, userinfo } = this.state;
+    const { isLogin } = this.state;
     return (
-      <BrowserRouter>
-        <div>
+      <div>
+        <BrowserRouter>
           <Header />
-          <Route exact path="/" component={Home} />
-          <Route path="/signup" component={SignUp} />
-          <Route path="/signin" component={SignIn} />
-
           <Route
-            path="/timer"
+            exact
+            path="/"
+            render={() => {
+              if (isLogin) {
+                return <Redirect to="/Timer" />;
+              } else {
+                return <Route path="/" component={Home} />;
+              }
+            }}
+          />
+          <Route
+            path="/user/signin"
             render={() => (
-              <Timer isLogin={isLogin} setIsLogin={this.setIsLogin} />
+              <SignIn
+                isLogin={isLogin}
+                handleLoginChange={() => this.handleLoginChange()}
+              />
             )}
           />
+          <Route
+            path="/user/signup"
+            render={() => <SignUp isLogin={isLogin} />}
+            this={this}
+          />
+          <Route path="/timer" render={() => <Timer isLogin={isLogin} />} />
           <Footer />
           <Redirect from="*" to="/" />
-        </div>
-      </BrowserRouter>
+        </BrowserRouter>
+        <p>{JSON.stringify(this.state.fields, null, 2)}</p>
+      </div>
     );
   }
 }

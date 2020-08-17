@@ -1,13 +1,15 @@
 // signOut 기능을 할 수 있는 버튼을 여기에
 import React, { useState } from "react";
 import axios from "axios";
-
 import DisplayTimer from "Components/DisplayTimer";
 import Btn from "Components/Btn";
 import Hamburger from "Components/Hamburger";
 import { Redirect } from "react-router-dom";
 // import "./Timer.css";
-function Timer(props) {
+
+axios.defaults.withCredentials = false;
+
+function Timer() {
   //state 변수 및 세팅
   const [time, setTime] = useState({ ms: 0, s: 0, m: 0, h: 0 });
   const [interv, setInterv] = useState();
@@ -41,18 +43,6 @@ function Timer(props) {
     return setTime({ ms: updatedMs, s: updatedS, m: updatedM, h: updatedH });
   };
   const start = () => {
-    axios
-      .post("http://3.18.213.157:5000/timer", {
-        username: props.userinfo.username,
-        id: props.userinfo.id,
-      })
-      .then((res) => {
-        console.log("timer start부분 res", res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
     setStatus(1);
     run();
     setInterv(setInterval(run, 10));
@@ -69,27 +59,24 @@ function Timer(props) {
     refresh();
     setMenuStatus(true);
   };
-  const postTime = (props) => {
+  const postTime = () => {
     let today = `${new Date().getFullYear()}/${
       new Date().getMonth() + 1
     }/${new Date().getDate()}`;
     console.log(`${time.h}:${time.m}:${time.s}`, today);
-
     axios
       .post("http://3.18.213.157:5000/timer", {
-        savetime: `${time.h}:${time.m}:${time.s}`,
-        username: props.userinfo.username,
+        time: `${time.h}:${time.m}:${time.s}`,
         day: today,
-        id: props.userinfo.id, //userid
+        id: 1, //userid
       })
       .then((res) => {
-        console.log("timer stop부분 res expect:time,day,userId", res);
+        console.log("timer부분 res expect:time,day,userId", res);
       })
       .catch((err) => {
         console.log(err);
       });
   };
-
   const refresh = () => {
     axios
       .get("http://3.18.213.157:5000/timer", {
@@ -97,30 +84,21 @@ function Timer(props) {
       })
       .then((res) => {
         console.log("refresh res test", res);
-        return res;
       })
       .catch((err) => {
         console.log(err);
       });
   };
-
   return (
     <div className="Timer">
-      {props.isLogin === true ? (
-        <div>
-          <Hamburger
-            open={open}
-            close={close}
-            status={menuStatus}
-            refresh={refresh}
-            setIsLogin={props.setIsLogin}
-          />
-          <DisplayTimer time={time} />
-          <Btn start={start} stop={stop} status={status} posttime={postTime} />
-        </div>
-      ) : (
-        <Redirect from="*" to="/" />
-      )}
+      <Hamburger
+        open={open}
+        close={close}
+        status={menuStatus}
+        refresh={refresh}
+      />
+      <DisplayTimer time={time} />
+      <Btn start={start} stop={stop} status={status} posttime={postTime} />
     </div>
   );
 }
