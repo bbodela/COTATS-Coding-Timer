@@ -1,90 +1,232 @@
 import React, { Component } from "react";
 import styled from "styled-components";
+import { withRouter } from "react-router-dom";
+import { Typography, TextField, Button } from "@material-ui/core";
 import axios from "axios";
 
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = false;
 
-/*  회원가입 버튼을 누르면
-	1. post요청성공시
-		 1-1. 회원가입완료되었다고 알려주고
-		 	로그인페이지로 redirect || 로그인하러가시겠습니까?
-	2. 회원가입실패하는경우
-		2-1. 이미 존재하는 유저면 이미 존재한다고 알려주기
-		2-2. 
- */
+/* 유효성 검사
+		username: 최소 2글자 이상
+		email: email형식에 부합하도록
+		pw: 비밀번호는 6자 이상
+		무조건 입력을해야 버튼이 눌러지도록>> 입력값이없으면 일치하는 유저가없어서 어차피 서버응답이 에러
+	*/
 
 class SignUp extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			email: "",
-			password: "",
 			username: "",
+			nameError: "",
+			email: "",
+			emailError: "",
+			password: "",
+			password2: "",
+			pwCheckError: "",
+			pwLengthError: "",
 		};
 	}
-	inputChangeHandler = (val) => (e) => {
-		this.setState({ [val]: e.target.value });
+
+	validateName = (str) => {
+		let isError = false;
+		const errorText = {};
+		if (str.length < 2) {
+			isError = true;
+			errorText.nameError = "이름은 최소 2자 이상이어야 합니다";
+		}
+		if (isError) {
+			this.setState({
+				username: str,
+				errorText: errorText.nameError,
+			});
+		}
+		if (!isError) {
+			this.setState({
+				username: str,
+				nameError: "",
+			});
+		}
+	};
+
+	validateEmail = (str) => {
+		let isError = false;
+		const errorText = {};
+		console.log("호출성공", str);
+		if (!str.includes("@")) {
+			isError = true;
+			errorText.emailError = "이메일을 입력해주세요";
+		}
+		if (isError) {
+			//에러가있으면
+			this.setState({
+				email: str,
+				emailError: errorText.emailError,
+			});
+		}
+		if (!isError) {
+			this.setState({
+				email: str,
+				emailError: "",
+			});
+		}
+	};
+
+	validatePwLeng = (str) => {
+		let isError = false;
+		const errorText = {};
+
+		if (str.length < 6) {
+			isError = true;
+			errorText.pwLengthError = "비밀번호는 6자 이상이어야 합니다";
+		}
+		if (isError) {
+			this.setState({
+				password: str,
+				pwLengthError: errorText.pwLengthError,
+			});
+		}
+		if (!isError) {
+			this.setState({
+				password: str,
+				pwLengthError: "",
+			});
+		}
+	};
+
+	validateConfirmPw = (str) => {
+		let isError = false;
+		const errorText = {};
+
+		if (this.state.password !== str) {
+			isError = true;
+			errorText.pwCheckError = "비밀번호가 일치하지 않습니다";
+		}
+		if (isError) {
+			this.setState({
+				password2: str,
+				pwCheckError: errorText.pwCheckError,
+			});
+		}
+		if (!isError) {
+			this.setState({
+				password2: str,
+				pwCheckError: "",
+			});
+		}
+	};
+
+	nameChangeHandler = (e) => {
+		let input = e.target.value;
+		const err = this.validateName(input);
+		if (!err) {
+			this.setState({ username: input });
+		}
+	};
+
+	emailChangeHandler = (e) => {
+		let input = e.target.value;
+		const err = this.validateEmail(input);
+		if (!err) {
+			this.setState({ email: input });
+		}
+	};
+
+	pwChangeHandler = (e) => {
+		const err = this.validatePwLeng(e.target.value);
+		if (!err) {
+			this.setState({
+				password: e.target.value,
+			});
+			console.log(this.state.password);
+		}
+	};
+
+	confirmpwHandler = (e) => {
+		const err = this.validateConfirmPw(e.target.value);
+		if (!err) {
+			this.setState({
+				password2: e.target.value,
+			});
+		}
 	};
 
 	joinHandler = () => {
 		const { email, password, username } = this.state;
-
 		axios
-			.post("http://localhost:4000/signup", {
+			.post("http://3.18.213.157:5000/user/signup", {
+				username: username,
 				email: email,
 				password: password,
-				username: username,
 			})
 			.then((res) => {
-				console.log("로그인 서버응답", res, this.props);
-				// console.log("로그인 서버응답", res.data);
-				// 가입성공하면 '가입에 성공했다!`라고 뭐라고띄우지
-
-				// 응답: 해당 유저의 id나 그냥 성공했다는 메시지만날려줘도 될듯
-				this.props.history.push("/signin");
+				this.props.history.push("/user/signin");
 			})
 			.catch((err) => console.log(err));
 	};
 
 	render() {
 		return (
-			<div>
-				<h1>회원가입</h1>
+			<>
 				<div>
-					<input
-						type="text"
-						placeholder="Nickname"
-						onChange={this.inputChangeHandler("username")}
-					/>
-				</div>
-				<div>
-					<input
-						type="email"
-						placeholder="Email"
-						onChange={this.inputChangeHandler("email")}
-					/>
-				</div>
-				<div>
-					<input
-						type="password"
-						placeholder="Password"
-						onChange={this.inputChangeHandler("password")}
-					/>
-				</div>
-				<div>
-					<input
-						type="password"
-						placeholder="Confirm Password"
-						onChange={this.inputChangeHandler("password")}
-					/>
-				</div>
-				<div>
-					<button type="submit" onClick={() => this.joinHandler()}>
+					<Typography variant="h4" component="p">
 						회원가입
-					</button>
+					</Typography>
 				</div>
-			</div>
+				<div>
+					<TextField
+						autoFocus
+						name="name"
+						type="name"
+						label="Nickname"
+						onKeyUp={(name) => this.nameChangeHandler(name)}
+						error={this.state.nameError === "" ? false : true}
+						helperText={this.state.nameError}
+					/>
+				</div>
+				<div>
+					<TextField
+						name="email"
+						type="email"
+						label="E-mail"
+						onChange={(e) => this.emailChangeHandler(e)}
+						error={this.state.emailError === "" ? false : true}
+						helperText={this.state.emailError}
+					/>
+				</div>
+				<div>
+					<TextField
+						name="password"
+						type="password"
+						label="Password"
+						onChange={(e) => this.pwChangeHandler(e)}
+						error={this.state.pwLengthError === "" ? false : true}
+						helperText={this.state.pwLengthError}
+					/>
+				</div>
+				<div>
+					<TextField
+						name="password"
+						type="password"
+						label="Confirm Password"
+						onChange={(e) => this.confirmpwHandler(e)}
+						error={this.state.pwCheckError === "" ? false : true}
+						helperText={this.state.pwCheckError}
+					/>
+				</div>
+				<div>
+					<Button
+						variant="contained"
+						type="submit"
+						color="primary"
+						onClick={() => this.joinHandler()}
+					>
+						가입
+					</Button>
+				</div>
+			</>
 		);
 	}
 }
-export default SignUp;
+
+export default withRouter(SignUp);

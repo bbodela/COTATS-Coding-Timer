@@ -1,36 +1,75 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import { Redirect } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import axios from "axios";
+import { Typography, TextField, Button } from "@material-ui/core";
 
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = false;
 
 class SignIn extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			email: "",
+			emailError: "",
 			password: "",
 		};
 	}
 
-	inputChangeHandler = (val) => (e) => {
-		this.setState({ [val]: e.target.value });
+	validateEmail = (str) => {
+		let isError = false;
+		const errorText = {};
+		console.log("호출성공", str);
+		if (!str.includes("@")) {
+			isError = true;
+			errorText.emailError = "이메일을 입력해주세요";
+		}
+		if (isError) {
+			//에러가있으면
+			this.setState({
+				email: str,
+				emailError: errorText.emailError,
+			});
+		}
+		if (!isError) {
+			this.setState({
+				email: str,
+				emailError: "",
+			});
+		}
 	};
 
-	// 유효성 검사부분 필요!
-	// @입력안하면 @포함하라고하는기능, 비밀번호는 6자 이상 ,
-	// 무조건 입력을해야 버튼이 눌러지도록>> 입력값이없으면 서버요청응답이에러니까 어차피안됨
-	loginHandler = () => {
-		const { email, password } = this.state;
+	inputEmailChangeHandler = (e) => {
+		console.log("email내용", e.target.value);
+		let input = e.target.value;
+		const err = this.validateEmail(input);
 
+		if (!err) {
+			this.setState({ email: input });
+		}
+	};
+
+	inputPwChangeHandler = (e) => {
+		this.setState({ password: e.target.value });
+	};
+
+	/* 유효성 검사
+		email: email형식에 부합하도록
+		pw: 비밀번호는 6자 이상
+		무조건 입력을해야 버튼이 눌러지도록>> 입력값이없으면 일치하는 유저가없어서 어차피 서버응답이 에러
+	*/
+	loginHandler = () => {
+		// check for errors
+		const { email, password } = this.state;
+		const { handleLoginChange } = this.props;
 		axios
-			.post("http://localhost:4000/signin", {
+			.post("http://3.18.213.157:5000/user/signin", {
 				email: email,
 				password: password,
 			})
 			.then((res) => {
-				console.log("로그인 서버응답", res);
+				console.log("로그인 서버응답", res, this.props);
+				handleLoginChange();
 				this.props.history.push("/timer");
 				// 로그인요청 응답: 해당 유저의 모든 데이터
 				// 로그인성공 시 timer로 redirect
@@ -41,33 +80,51 @@ class SignIn extends Component {
 
 	render() {
 		return (
-			<div>
-				<h1>로그인</h1>
+			<>
 				<div>
-					<input
+					<Typography variant="h4" component="p">
+						로그인
+					</Typography>
+				</div>
+				<div>
+					<TextField
+						autoFocus
+						name="email"
 						type="email"
-						placeholder="Email"
-						onChange={this.inputChangeHandler("email")}
+						label="E-mail"
+						onChange={(email) => this.inputEmailChangeHandler(email)}
+						error={this.state.emailError === "" ? false : true}
+						helperText={this.state.emailError}
 					/>
 				</div>
 				<div>
-					<input
+					<TextField
+						name="password"
 						type="password"
-						placeholder="Password"
-						onChange={this.inputChangeHandler("password")}
+						label="Password"
+						onChange={(pw) => this.inputPwChangeHandler(pw)}
 					/>
 				</div>
+				<br />
 				<div>
-					<button type="submit" onClick={() => this.loginHandler()}>
-						공부하러 가기
-					</button>
-					<button onClick={() => this.props.history.push("/signup")}>
+					<Button
+						variant="contained"
+						color="primary"
+						onClick={() => this.loginHandler()}
+					>
+						공부시작
+					</Button>
+					<Button
+						variant="outlined"
+						color="primary"
+						onClick={() => this.props.history.push("/user/signup")}
+					>
 						회원가입
-					</button>
+					</Button>
 				</div>
-			</div>
+			</>
 		);
 	}
 }
 
-export default SignIn;
+export default withRouter(SignIn);

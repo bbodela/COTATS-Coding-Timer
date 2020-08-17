@@ -2,14 +2,21 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-const HeaderStyle = styled.div`
-	background: #7a7cff;
-	display: table;
-	table-layout: fixed;
+const Nav = styled.nav`
 	width: 100%;
-	text-align: center;
-	text-decoration: none;
+	height: 55px;
+	border-bottom: 2px solid #f1f1f1;
+	padding: 0 20px;
+	justify-content: space-between;
+	padding: ${(props) => props.logo || "15px 0"};
 `;
+
+// background: #7a7cff;
+// display: table;
+// table-layout: fixed;
+
+// text-align: center;
+// text-decoration: none;
 // const LogoStyle = styled.Link`
 // 	background: white;
 // 	color: black;
@@ -24,14 +31,15 @@ const HeaderStyle = styled.div`
 class Header extends Component {
 	render() {
 		return (
-			<HeaderStyle>
-				<div>
+			<Nav>
+				<div logo>
 					<Link to="/">logo자리</Link>
-
-					<Link to="/signin">로그인</Link>
-					<Link to="/signup">회원가입</Link>
 				</div>
-			</HeaderStyle>
+				<div>
+					<Link to="/user/signin">로그인</Link>
+					<Link to="/user/signup">회원가입</Link>
+				</div>
+			</Nav>
 		);
 	}
 }
