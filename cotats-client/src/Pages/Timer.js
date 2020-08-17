@@ -5,8 +5,9 @@ import axios from "axios";
 import DisplayTimer from "Components/DisplayTimer";
 import Btn from "Components/Btn";
 import Hamburger from "Components/Hamburger";
+import { Redirect } from "react-router-dom";
 // import "./Timer.css";
-function Timer() {
+function Timer(props) {
   //state 변수 및 세팅
   const [time, setTime] = useState({ ms: 0, s: 0, m: 0, h: 0 });
   const [interv, setInterv] = useState();
@@ -40,6 +41,18 @@ function Timer() {
     return setTime({ ms: updatedMs, s: updatedS, m: updatedM, h: updatedH });
   };
   const start = () => {
+    axios
+      .post("http://3.18.213.157:5000/timer", {
+        username: props.userinfo.username,
+        id: props.userinfo.id,
+      })
+      .then((res) => {
+        console.log("timer start부분 res", res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
     setStatus(1);
     run();
     setInterv(setInterval(run, 10));
@@ -53,22 +66,24 @@ function Timer() {
     setMenuStatus(false);
   };
   const close = () => {
+    refresh();
     setMenuStatus(true);
   };
-  const postTime = () => {
+  const postTime = (props) => {
     let today = `${new Date().getFullYear()}/${
       new Date().getMonth() + 1
     }/${new Date().getDate()}`;
     console.log(`${time.h}:${time.m}:${time.s}`, today);
 
     axios
-      .post("http://localhost:4000/timer", {
-        time: `${time.h}:${time.m}:${time.s}`,
+      .post("http://3.18.213.157:5000/timer", {
+        savetime: `${time.h}:${time.m}:${time.s}`,
+        username: props.userinfo.username,
         day: today,
-        userId: 1,
+        id: props.userinfo.id, //userid
       })
       .then((res) => {
-        console.log("timer부분 res", res);
+        console.log("timer stop부분 res expect:time,day,userId", res);
       })
       .catch((err) => {
         console.log(err);
@@ -77,11 +92,12 @@ function Timer() {
 
   const refresh = () => {
     axios
-      .get("http://localhost:4000/timer", {
+      .get("http://3.18.213.157:5000/timer", {
         params: { test: "gettest" },
       })
       .then((res) => {
         console.log("refresh res test", res);
+        return res;
       })
       .catch((err) => {
         console.log(err);
@@ -90,14 +106,21 @@ function Timer() {
 
   return (
     <div className="Timer">
-      <Hamburger
-        open={open}
-        close={close}
-        status={menuStatus}
-        refresh={refresh}
-      />
-      <DisplayTimer time={time} />
-      <Btn start={start} stop={stop} status={status} posttime={postTime} />
+      {props.isLogin === true ? (
+        <div>
+          <Hamburger
+            open={open}
+            close={close}
+            status={menuStatus}
+            refresh={refresh}
+            setIsLogin={props.setIsLogin}
+          />
+          <DisplayTimer time={time} />
+          <Btn start={start} stop={stop} status={status} posttime={postTime} />
+        </div>
+      ) : (
+        <Redirect from="*" to="/" />
+      )}
     </div>
   );
 }

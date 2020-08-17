@@ -6,7 +6,12 @@ function Hamburger(props) {
   return (
     <div className="sideMenu">
       {props.status === true ? (
-        <Record open={props.open} fakedata={fakedata} refresh={props.refresh} />
+        <Record
+          open={props.open}
+          fakedata={fakedata} //maybe it will be res
+          refresh={props.refresh} //refresh로 return res를 했는데 res가 잘 나오는지 확인할것
+          setIsLogin={props.setIsLogin}
+        />
       ) : (
         ""
       )}
