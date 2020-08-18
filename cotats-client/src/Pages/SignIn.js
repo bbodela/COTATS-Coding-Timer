@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import { withRouter } from "react-router-dom";
+import { withRouter, Redirect } from "react-router-dom";
 import axios from "axios";
 import { Typography, TextField, Button } from "@material-ui/core";
 
@@ -57,23 +57,26 @@ class SignIn extends Component {
 		email: email형식에 부합하도록
 		pw: 비밀번호는 6자 이상
 		무조건 입력을해야 버튼이 눌러지도록>> 입력값이없으면 일치하는 유저가없어서 어차피 서버응답이 에러
+			// 입력 폼 입력안되면 버튼눌려지지 않는 에러 추가
 	*/
 	loginHandler = () => {
 		// check for errors
 		const { email, password } = this.state;
-		const { handleLoginChange } = this.props;
+		const { loginChangeHandler } = this.props;
 		axios
 			.post("http://3.18.213.157:5000/user/signin", {
 				email: email,
 				password: password,
 			})
 			.then((res) => {
-				console.log("로그인 서버응답", res, this.props);
-				handleLoginChange();
-				this.props.history.push("/timer");
-				// 로그인요청 응답: 해당 유저의 모든 데이터
-				// 로그인성공 시 timer로 redirect
-				// 로그아웃은 timer화면으로 갔을 때 Header에 나오게 하면 좋을것같습니다
+				console.log("로그인 this.props 무엇?", this.props);
+				loginChangeHandler();
+				console.log("로그인after this.props 무엇?", this.props);
+				if (this.props.isLogin === true) {
+					this.props.history.push("/timer");
+				} else {
+					this.props.history.push("/");
+				}
 			})
 			.catch((err) => console.log(err));
 	};
@@ -81,50 +84,87 @@ class SignIn extends Component {
 	render() {
 		return (
 			<>
-				<div>
-					<Typography variant="h4" component="p">
-						로그인
-					</Typography>
-				</div>
-				<div>
-					<TextField
-						autoFocus
-						name="email"
-						type="email"
-						label="E-mail"
-						onChange={(email) => this.inputEmailChangeHandler(email)}
-						error={this.state.emailError === "" ? false : true}
-						helperText={this.state.emailError}
-					/>
-				</div>
-				<div>
-					<TextField
-						name="password"
-						type="password"
-						label="Password"
-						onChange={(pw) => this.inputPwChangeHandler(pw)}
-					/>
-				</div>
-				<br />
-				<div>
-					<Button
-						variant="contained"
-						color="primary"
-						onClick={() => this.loginHandler()}
-					>
-						공부시작
-					</Button>
-					<Button
-						variant="outlined"
-						color="primary"
-						onClick={() => this.props.history.push("/user/signup")}
-					>
-						회원가입
-					</Button>
-				</div>
+				{this.props.isLogin === false ? (
+					<Background>
+						<div>
+							<Typography variant="h4" component="p">
+								로그인
+							</Typography>
+						</div>
+						<Wrap1>
+							<div>
+								<TextField
+									autoFocus
+									name="email"
+									type="email"
+									label="E-mail"
+									onChange={(email) => this.inputEmailChangeHandler(email)}
+									error={this.state.emailError === "" ? false : true}
+									helperText={this.state.emailError}
+								/>
+							</div>
+							<div>
+								<TextField
+									name="password"
+									type="password"
+									label="Password"
+									onChange={(pw) => this.inputPwChangeHandler(pw)}
+								/>
+							</div>
+							<br />
+							<Wrap2>
+								<Button
+									variant="contained"
+									color="primary"
+									onClick={() => this.loginHandler()}
+								>
+									공부시작
+								</Button>
+								<Button
+									variant="outlined"
+									color="primary"
+									onClick={() => this.props.history.push("/user/signup")}
+								>
+									회원가입
+								</Button>
+							</Wrap2>
+						</Wrap1>
+					</Background>
+				) : (
+					<Background>
+						<Wrap1>
+							<Wrap2>
+								<h3>로그인되어 있습니다💕️</h3>
+								<Redirect to="/timer">
+									<Button variant="outlined" color="primary">
+										💻️코딩하러 갈까요?💻️
+									</Button>
+								</Redirect>
+							</Wrap2>
+						</Wrap1>
+					</Background>
+				)}
 			</>
 		);
 	}
 }
+
+const Background = styled.div`
+	display: grid;
+	place-items: center;
+	height: 74%;
+	width: 100%;
+`;
+
+const Wrap1 = styled.div`
+	width: clamp(23ch, 60%, 23ch);
+	display: flex;
+	flex-direction: column;
+`;
+
+const Wrap2 = styled.div`
+	height: 125px;
+	width: 100%;
+`;
 
 export default withRouter(SignIn);

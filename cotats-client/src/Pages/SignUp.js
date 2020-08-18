@@ -11,6 +11,7 @@ axios.defaults.withCredentials = false;
 		email: email형식에 부합하도록
 		pw: 비밀번호는 6자 이상
 		무조건 입력을해야 버튼이 눌러지도록>> 입력값이없으면 일치하는 유저가없어서 어차피 서버응답이 에러
+			// 입력 폼 입력안되면 버튼눌려지지 않는 에러 추가
 	*/
 
 class SignUp extends Component {
@@ -167,66 +168,87 @@ class SignUp extends Component {
 
 	render() {
 		return (
-			<>
+			<Background>
 				<div>
 					<Typography variant="h4" component="p">
 						회원가입
 					</Typography>
 				</div>
-				<div>
-					<TextField
-						autoFocus
-						name="name"
-						type="name"
-						label="Nickname"
-						onKeyUp={(name) => this.nameChangeHandler(name)}
-						error={this.state.nameError === "" ? false : true}
-						helperText={this.state.nameError}
-					/>
-				</div>
-				<div>
-					<TextField
-						name="email"
-						type="email"
-						label="E-mail"
-						onChange={(e) => this.emailChangeHandler(e)}
-						error={this.state.emailError === "" ? false : true}
-						helperText={this.state.emailError}
-					/>
-				</div>
-				<div>
-					<TextField
-						name="password"
-						type="password"
-						label="Password"
-						onChange={(e) => this.pwChangeHandler(e)}
-						error={this.state.pwLengthError === "" ? false : true}
-						helperText={this.state.pwLengthError}
-					/>
-				</div>
-				<div>
-					<TextField
-						name="password"
-						type="password"
-						label="Confirm Password"
-						onChange={(e) => this.confirmpwHandler(e)}
-						error={this.state.pwCheckError === "" ? false : true}
-						helperText={this.state.pwCheckError}
-					/>
-				</div>
-				<div>
-					<Button
-						variant="contained"
-						type="submit"
-						color="primary"
-						onClick={() => this.joinHandler()}
-					>
-						가입
-					</Button>
-				</div>
-			</>
+				<Wrap1>
+					<div>
+						<TextField
+							autoFocus
+							name="name"
+							type="name"
+							label="Nickname"
+							onKeyUp={(name) => this.nameChangeHandler(name)}
+							error={this.state.nameError === "" ? false : true}
+							helperText={this.state.nameError}
+						/>
+					</div>
+					<div>
+						<TextField
+							name="email"
+							type="email"
+							label="E-mail"
+							onChange={(e) => this.emailChangeHandler(e)}
+							error={this.state.emailError === "" ? false : true}
+							helperText={this.state.emailError}
+						/>
+					</div>
+					<div>
+						<TextField
+							name="password"
+							type="password"
+							label="Password"
+							onChange={(e) => this.pwChangeHandler(e)}
+							error={this.state.pwLengthError === "" ? false : true}
+							helperText={this.state.pwLengthError}
+						/>
+					</div>
+					<div>
+						<TextField
+							name="password"
+							type="password"
+							label="Confirm Password"
+							onChange={(e) => this.confirmpwHandler(e)}
+							error={this.state.pwCheckError === "" ? false : true}
+							helperText={this.state.pwCheckError}
+						/>
+					</div>
+					<br />
+					<Wrap2>
+						<Button
+							variant="contained"
+							type="submit"
+							color="primary"
+							onClick={() => this.joinHandler()}
+						>
+							가입
+						</Button>
+					</Wrap2>
+				</Wrap1>
+			</Background>
 		);
 	}
 }
+
+const Background = styled.div`
+	display: grid;
+	place-items: center;
+	height: 74%;
+	width: 100%;
+`;
+
+const Wrap1 = styled.div`
+	width: clamp(23ch, 60%, 23ch);
+	display: flex;
+	flex-direction: column;
+`;
+
+const Wrap2 = styled.div`
+	height: 125px;
+	width: 100%;
+`;
 
 export default withRouter(SignUp);

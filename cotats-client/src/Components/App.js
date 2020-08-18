@@ -1,68 +1,113 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { BrowserRouter, Route, Redirect } from "react-router-dom";
+import styled from "styled-components";
+import { createGlobalStyle, ThemeProvider } from "styled-components";
+import theme from "../theme";
+
 import Home from "Pages/Home";
 import SignIn from "Pages/SignIn";
 import SignUp from "Pages/SignUp";
 import Timer from "Pages/Timer";
 import Header from "Components/Header";
 import Footer from "Components/Footer";
-import Axios from "axios";
 
 class App extends Component {
-  constructor(props) {
-    super(props);
+	constructor(props) {
+		super(props);
 
-    this.state = {
-      isLogin: false,
-    };
-  }
+		this.state = {
+			isLogin: false,
+		};
+	}
 
-  // handle login state
-  handleLoginChange = () => {
-    const { isLogin } = this.state;
-    this.setState({
-      isLogin: !isLogin,
-    });
-  };
+	// handle login state
+	loginChangeHandler = () => {
+		const { isLogin } = this.state;
+		this.setState({
+			isLogin: !isLogin,
+		});
+	};
 
-  render() {
-    const { isLogin } = this.state;
-    return (
-      <div>
-        <BrowserRouter>
-          <Header />
-          <Route
-            exact
-            path="/"
-            render={() => {
-              if (isLogin) {
-                return <Redirect to="/Timer" />;
-              } else {
-                return <Route path="/" component={Home} />;
-              }
-            }}
-          />
-          <Route
-            path="/user/signin"
-            render={() => (
-              <SignIn
-                isLogin={isLogin}
-                handleLoginChange={() => this.handleLoginChange()}
-              />
-            )}
-          />
-          <Route
-            path="/user/signup"
-            render={() => <SignUp isLogin={isLogin} />}
-            this={this}
-          />
-          <Route path="/timer" render={() => <Timer isLogin={isLogin} />} />
-          <Footer />
-          <Redirect from="*" to="/" />
-        </BrowserRouter>
-        <p>{JSON.stringify(this.state.fields, null, 2)}</p>
-      </div>
-    );
-  }
+	// componentDidMount = () => {
+	// 	const { isLogin } = this.state;
+	// 	// 로그인 된 상태이면 로그인 풀고
+	// 	// 로그아웃된 상태이면 로그인 시킨?
+	// 	if (!isLogin) {
+	// 		this.loginChangeHandler();
+	// 	}
+	// };
+
+	render() {
+		const { isLogin } = this.state;
+		return (
+			<Fragment>
+				<ThemeProvider theme={theme}>
+					<GlobalStyle />
+					<Container>
+						<BrowserRouter>
+							<Header
+								isLogin={isLogin}
+								loginChangeHandler={() => this.loginChangeHandler()}
+							/>
+							<Route
+								exact
+								path="/"
+								render={() => {
+									if (isLogin) {
+										return <Redirect to="/Timer" />;
+									} else {
+										return <Route path="/" component={Home} />;
+									}
+								}}
+							/>
+							<Route
+								path="/user/signin"
+								render={() => (
+									<SignIn
+										isLogin={isLogin}
+										loginChangeHandler={() => this.loginChangeHandler()}
+										// handleLogoutChange={() => this.handleLogoutChange()}
+									/>
+								)}
+							/>
+							<Route
+								path="/user/signup"
+								render={() => <SignUp isLogin={isLogin} />}
+							/>
+							<Route
+								path="/timer"
+								render={() => (
+									<Timer
+										isLogin={isLogin}
+										// loginChangeHandler={() => this.loginChangeHandler()}
+									/>
+								)}
+							/>
+							<Redirect from="*" to="/" />
+							<Footer />
+						</BrowserRouter>
+					</Container>
+				</ThemeProvider>
+			</Fragment>
+		);
+	}
 }
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    margin: 0;
+    padding: 0;
+		
+	}
+`;
+
+const Container = styled.div`
+	height: 100vh;
+	width: 100%;
+	background-color: #f5f6fa;
+	& * {
+		box-sizing: border-box;
+	}
+`;
+
 export default App;
