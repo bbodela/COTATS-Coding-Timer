@@ -1,12 +1,15 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { BrowserRouter, Route, Redirect } from "react-router-dom";
+import styled from "styled-components";
+import { createGlobalStyle, ThemeProvider } from "styled-components";
+import theme from "../theme";
+
 import Home from "Pages/Home";
 import SignIn from "Pages/SignIn";
 import SignUp from "Pages/SignUp";
 import Timer from "Pages/Timer";
 import Header from "Components/Header";
 import Footer from "Components/Footer";
-import Axios from "axios";
 
 class App extends Component {
   constructor(props) {
@@ -18,73 +21,93 @@ class App extends Component {
   }
 
   // handle login state
-  handleLoginChange = () => {
+  loginChangeHandler = () => {
     const { isLogin } = this.state;
     this.setState({
-      isLogin: true,
+      isLogin: !isLogin,
     });
   };
-  handleLogoutChange = () => {
-    const { isLogin } = this.state;
-    this.setState({
-      isLogin: false,
-    });
-  };
-  componentWillMount = () => {
-    const { isLogin } = this.state;
-    if (!isLogin) {
-      this.handleLoginChange();
-    }
-  };
+
+  // componentDidMount = () => {
+  // 	const { isLogin } = this.state;
+  // 	// 로그인 된 상태이면 로그인 풀고
+  // 	// 로그아웃된 상태이면 로그인 시킨?
+  // 	if (!isLogin) {
+  // 		this.loginChangeHandler();
+  // 	}
+  // };
 
   render() {
     const { isLogin } = this.state;
     return (
-      <div>
-        <BrowserRouter>
-          <Header />
-          <Route
-            exact
-            path="/"
-            render={() => {
-              if (isLogin) {
-                return <Redirect to="/Timer" />;
-              } else {
-                return <Route path="/" component={Home} />;
-              }
-            }}
-          />
-          <Route
-            path="/user/signin"
-            render={() => (
-              <SignIn
+      <Fragment>
+        <ThemeProvider theme={theme}>
+          <GlobalStyle />
+          <Container>
+            <BrowserRouter>
+              <Header
                 isLogin={isLogin}
-                handleLoginChange={() => this.handleLoginChange()}
-                handleLogoutChange={() => this.handleLogoutChange()}
+                loginChangeHandler={() => this.loginChangeHandler()}
               />
-            )}
-          />
-          <Route
-            path="/user/signup"
-            render={() => <SignUp isLogin={isLogin} />}
-            this={this}
-          />
-          <Route
-            path="/timer"
-            render={() => (
-              <Timer
-                isLogin={isLogin}
-                handleLogoutChange={() => this.handleLogoutChange()}
+              <Route
+                exact
+                path="/"
+                render={() => {
+                  if (isLogin) {
+                    return <Redirect to="/Timer" />;
+                  } else {
+                    return <Route path="/" component={Home} />;
+                  }
+                }}
               />
-            )}
-          />
-          <Footer />
-          <Redirect from="*" to="/" />
-        </BrowserRouter>
-        <p>{JSON.stringify(this.state.fields, null, 2)}</p>
-      </div>
+              <Route
+                path="/user/signin"
+                render={() => (
+                  <SignIn
+                    isLogin={isLogin}
+                    loginChangeHandler={() => this.loginChangeHandler()}
+                    // handleLogoutChange={() => this.handleLogoutChange()}
+                  />
+                )}
+              />
+              <Route
+                path="/user/signup"
+                render={() => <SignUp isLogin={isLogin} />}
+              />
+              <Route
+                path="/timer"
+                render={() => (
+                  <Timer
+                    isLogin={isLogin}
+                    // loginChangeHandler={() => this.loginChangeHandler()}
+                  />
+                )}
+              />
+              <Redirect from="*" to="/" />
+              <Footer />
+            </BrowserRouter>
+          </Container>
+        </ThemeProvider>
+      </Fragment>
     );
   }
 }
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    margin: 0;
+    padding: 0;
+		
+	}
+`;
+
+const Container = styled.div`
+  height: 100vh;
+  width: 100%;
+  background-color: #f5f6fa;
+  & * {
+    box-sizing: border-box;
+  }
+`;
 
 export default App;

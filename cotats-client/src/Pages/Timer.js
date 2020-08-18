@@ -5,8 +5,10 @@ import DisplayTimer from "Components/DisplayTimer";
 import Btn from "Components/Btn";
 import Hamburger from "Components/Hamburger";
 import { Redirect } from "react-router-dom";
-// import "./Timer.css";
+import styled from "styled-components";
+
 function Timer(props) {
+  console.log("타이머props", props);
   //state 변수 및 세팅
   const [time, setTime] = useState({ ms: 0, s: 0, m: 0, h: 0 });
   const [interv, setInterv] = useState();
@@ -41,7 +43,7 @@ function Timer(props) {
   };
   const start = () => {
     axios
-      .post("http://3.18.213.157:5000/timer")
+      .post("http://localhost:4000/timer")
       .then((res) => {
         console.log("timer start부분 res", res);
       })
@@ -70,7 +72,7 @@ function Timer(props) {
     }/${new Date().getDate()}`;
     console.log(`${time.h}:${time.m}:${time.s}`, today);
     axios
-      .post("http://3.18.213.157:5000/timer", {
+      .post("http://localhost:4000/timer", {
         savetime: `${time.h}:${time.m}:${time.s}`,
         // day: today,
         // username: props.userinfo.username,
@@ -99,22 +101,29 @@ function Timer(props) {
   return (
     <div className="Timer">
       {props.isLogin === true ? (
-        <div>
+        <Background>
           <Hamburger
             open={open}
             close={close}
             status={menuStatus}
             refresh={refresh}
             setIsLogin={props.setIsLogin}
-            handleLogoutChange={props.handleLogoutChange}
           />
+
           <DisplayTimer time={time} />
           <Btn start={start} stop={stop} status={status} posttime={postTime} />
-        </div>
+        </Background>
       ) : (
         <Redirect from="*" to="/" />
       )}
     </div>
   );
 }
+
+const Background = styled.div`
+  display: grid;
+  place-items: center;
+  height: 100vh;
+`;
+
 export default Timer;
