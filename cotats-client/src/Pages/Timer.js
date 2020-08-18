@@ -1,11 +1,13 @@
 // signOut 기능을 할 수 있는 버튼을 여기에
 import React, { useState } from "react";
+import ReactDOM from "react-dom";
 import axios from "axios";
 import DisplayTimer from "Components/DisplayTimer";
 import Btn from "Components/Btn";
 import Hamburger from "Components/Hamburger";
 import { Redirect } from "react-router-dom";
 import styled from "styled-components";
+import { fakedata } from "../fakedata/fakedata";
 
 function Timer(props) {
   console.log("타이머props", props);
@@ -87,12 +89,44 @@ function Timer(props) {
   };
   const refresh = () => {
     axios
-      .get("http://3.18.213.157:5000/timer", {
+      .get("http://3.18.213.157:5000/time/timerank", {
         params: { test: "gettest" },
       })
       .then((res) => {
         console.log("refresh res test", res);
-        return res;
+        let myData;
+        let index;
+        let rankingData = [];
+        for (let i = 0; i < fakedata.length; i += 1) {
+          if (fakedata[i].id === 4) {
+            myData = fakedata[i];
+          }
+        }
+        for (let i = 0; i < 10; i += 1) {
+          rankingData.push(fakedata[i]);
+        }
+        ReactDOM.render(
+          <div>
+            <div>{`${new Date().getMonth() + 1}/${new Date().getDate()}`}</div>
+            <div className="mydata">
+              <div className="myname">{myData.username}</div>
+              <div className="mytime">{myData.time}</div>
+              <div className="ranking">{myData.id}</div>
+            </div>
+            <div>
+              {rankingData.map((data, index) => {
+                return (
+                  <ul key={index}>
+                    <li>{index + 1}</li>
+                    <li>{data.username}</li>
+                    <li>{data.time}</li>
+                  </ul>
+                );
+              })}
+            </div>
+          </div>,
+          document.getElementById("ranking")
+        );
       })
       .catch((err) => {
         console.log(err);
