@@ -63,14 +63,18 @@ class SignIn extends Component {
 		// check for errors
 		const { email, password } = this.state;
 		const { loginChangeHandler } = this.props;
+
 		axios
 			.post("http://3.18.213.157:5000/user/signin", {
+				// .post("http://localhost:5000/user/signin", {
 				email: email,
 				password: password,
 			})
 			.then((res) => {
 				console.log("로그인 this.props 무엇?", this.props);
+				console.log("로그인 응답", res.data);
 				loginChangeHandler();
+				// if(res.)
 				console.log("로그인after this.props 무엇?", this.props);
 				if (this.props.isLogin === true) {
 					this.props.history.push("/timer");

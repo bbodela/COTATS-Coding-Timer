@@ -72,6 +72,11 @@ app.post("/user/signup", (req, res) => {
 	// } // 가입된 유저에대한 뭔가를보내주고싶은데 자꾸409에러남
 });
 
+app.post("/user/logincheck", (req, res) => {
+	console.log("서버테스트 req", req);
+	res.send(req);
+});
+
 app.listen(port, () => {
 	console.log(`Example app listening at http://localhost:${port}`);
 });

@@ -30,11 +30,18 @@ class App extends Component {
 
 	// componentDidMount = () => {
 	// 	const { isLogin } = this.state;
-	// 	// 로그인 된 상태이면 로그인 풀고
-	// 	// 로그아웃된 상태이면 로그인 시킨?
-	// 	if (!isLogin) {
-	// 		this.loginChangeHandler();
-	// 	}
+	// 	axios
+	// 		.post("http://localhost:4000/user/logincheck")
+	// 		.then((res) => {
+	// 			console.log("app.js 응답", res);
+
+	// 			if (res.data.id) {
+	// 				this.props.history.push("/timer");
+	// 			} else {
+	// 				this.props.history.push("/");
+	// 			}
+	// 		})
+	// 		.catch((err) => console.log(err));
 	// };
 
 	render() {
