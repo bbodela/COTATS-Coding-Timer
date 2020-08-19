@@ -11,14 +11,15 @@ const Home = () => {
 };
 
 const Container = styled.div`
-	height: 74%;
+	min-height: 100vh;
 	width: 100%;
-	background: lightpink;
+	background-color: #f5f6fa;
 	display: flex;
 	flex-direction: column;
 	padding: 1rem;
 	& * {
 		box-sizing: border-box;
+		font-family: "Source Sans Pro";
 	}
 `;
 
