@@ -17,16 +17,6 @@ class SignIn extends Component {
     };
   }
 
-  doSignUp = () => {
-    const { email, provider, username } = this.state;
-
-    window.sessionStorage.setItem("email", email);
-    window.sessionStorage.setItem("provider", provider);
-    window.seesionStorage.setItem("username", username);
-    this.props.loginChangeHandler();
-    this.props.history.push("/user/signin");
-  };
-
   validateEmail = (str) => {
     let isError = false;
     const errorText = {};
@@ -83,7 +73,6 @@ class SignIn extends Component {
         console.log(res);
         console.log("로그인 this.props 무엇?", this.props);
         window.sessionStorage.setItem("user", JSON.stringify(res.data));
-        console.log(res.data.id, "res.data");
         loginChangeHandler();
         if (this.props.isLogin === true) {
           this.props.history.push("/timer");
