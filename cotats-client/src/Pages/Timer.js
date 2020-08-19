@@ -45,7 +45,7 @@ function Timer(props) {
 	};
 	const start = () => {
 		axios
-			.post("http://localhost:4000/timer")
+			.post("http://3.18.213.157:5000/time/timestart")
 			.then((res) => {
 				console.log("timer start부분 res", res);
 			})
@@ -74,7 +74,7 @@ function Timer(props) {
 		}/${new Date().getDate()}`;
 		console.log(`${time.h}:${time.m}:${time.s}`, today);
 		axios
-			.post("http://localhost:4000/timer", {
+			.post("http://3.18.213.157:5000/time/timepause", {
 				savetime: `${time.h}:${time.m}:${time.s}`,
 				// day: today,
 				// username: props.userinfo.username,
@@ -93,39 +93,36 @@ function Timer(props) {
 				params: { test: "gettest" },
 			})
 			.then((res) => {
-				console.log("refresh res test", res);
-				let myData;
-				let index;
-				let rankingData = [];
-				for (let i = 0; i < fakedata.length; i += 1) {
-					if (fakedata[i].id === 4) {
-						myData = fakedata[i];
-					}
-				}
-				for (let i = 0; i < 10; i += 1) {
-					rankingData.push(fakedata[i]);
-				}
+				console.log("refresh res test", res.data);
+				// let myData;
+				let data = res.data; //[{…}, {…}, {…}, {…}, {…}, {…}]
+				let myData = data.filter((mine) => mine.id === 4);
+				let ranking = data.indexOf;
+				// 세션아이디=유저아이디 같은 유저의 data내에서의 index
+
 				ReactDOM.render(
 					<div>
 						<div>{`${new Date().getMonth() + 1}/${new Date().getDate()}`}</div>
 						<div className="mydata">
-							<div className="myname">{myData.username}</div>
-							<div className="mytime">{myData.time}</div>
-							<div className="ranking">{myData.id}</div>
+							<div className="myname">{myData[0].user.username}</div>
+							<div className="mytime">{myData[0].savetime}</div>
+							<div className="ranking">{myData[0].id}</div>
 						</div>
 						<div>
-							{rankingData.map((data, index) => {
-								return (
-									<ul key={index}>
-										<li>{index + 1}</li>
-										<li>{data.username}</li>
-										<li>{data.time}</li>
-									</ul>
-								);
-							})}
+							{data
+								.filter((rank, index) => index < 10)
+								.map((student, index) => {
+									return (
+										<ul key={index}>
+											<li>{index + 1}</li>
+											<li>{student.user.username}</li>
+											<li>{student.savetime}</li>
+										</ul>
+									);
+								})}
 						</div>
-					</div>,
-					document.getElementById("ranking")
+						document.getElementById("rankingtable")
+					</div>
 				);
 			})
 			.catch((err) => {

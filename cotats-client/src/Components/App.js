@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { BrowserRouter, Route, Redirect } from "react-router-dom";
-import styled from "styled-components";
-import { createGlobalStyle, ThemeProvider } from "styled-components";
+import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
+import axios from "axios";
 import theme from "../theme";
 
 import Home from "Pages/Home";
@@ -28,14 +28,34 @@ class App extends Component {
 		});
 	};
 
-	// componentDidMount = () => {
-	// 	const { isLogin } = this.state;
-	// 	// 로그인 된 상태이면 로그인 풀고
-	// 	// 로그아웃된 상태이면 로그인 시킨?
-	// 	if (!isLogin) {
-	// 		this.loginChangeHandler();
-	// 	}
-	// };
+	// check to see >> cookie's installed
+	// asking the API >> isAuthenticated or not
+	checkLoginStatus = () => {
+		axios
+			// .get("http://3.18.213.157:5000/logincheck", { withCredentials: false })
+			.get("http://localhost:4000/logincheck", { withCredentials: false })
+			.then((res) => {
+				console.log("loginchecckckck", res.headers.get("set-cookie"));
+				console.log("cokkkkkkie", document.cookie);
+				// if (res.data.logged_in && this.state.isLogin === false) {
+				// 	this.setState({ isLogin: true });
+				// } else if (!res.data.logged_in && this.state.isLogin === true) {
+				// 	this.setState({ isLogin: false });
+				// }
+			})
+			.catch((err) => console.log("check login error", err));
+	};
+
+	componentDidMount = () => {
+		this.checkLoginStatus();
+		// api요청으로 로그인 된 상태를 렌더
+		// 	const { isLogin } = this.state;
+		// 	// 로그인 된 상태이면 로그인 풀고
+		// 	// 로그아웃된 상태이면 로그인 시킨?
+		// 	if (!isLogin) {
+		// 		this.loginChangeHandler();
+		// 	}
+	};
 
 	render() {
 		const { isLogin } = this.state;
@@ -54,14 +74,14 @@ class App extends Component {
 								path="/"
 								render={() => {
 									if (isLogin) {
-										return <Redirect to="/Timer" />;
+										return <Redirect to="/timer" />;
 									} else {
 										return <Route path="/" component={Home} />;
 									}
 								}}
 							/>
 							<Route
-								path="/user/signin"
+								path="/signin"
 								render={() => (
 									<SignIn
 										isLogin={isLogin}
@@ -71,7 +91,7 @@ class App extends Component {
 								)}
 							/>
 							<Route
-								path="/user/signup"
+								path="/signup"
 								render={() => <SignUp isLogin={isLogin} />}
 							/>
 							<Route
@@ -97,16 +117,16 @@ const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
     padding: 0;
-		
+		height: 100%;
+	width: 100%;
 	}
 `;
 
 const Container = styled.div`
-	height: 100vh;
-	width: 100%;
 	background-color: #f5f6fa;
 	& * {
 		box-sizing: border-box;
+		font-family: "Source Sans Pro";
 	}
 `;
 

@@ -65,14 +65,14 @@ class SignIn extends Component {
 		const { loginChangeHandler } = this.props;
 
 		axios
-			.post("http://3.18.213.157:5000/user/signin", {
-				// .post("http://localhost:5000/user/signin", {
+			// .post("http://3.18.213.157:5000/user/signin", {
+			.post("http://localhost:4000/user/signin", {
 				email: email,
 				password: password,
 			})
 			.then((res) => {
-				console.log("로그인 this.props 무엇?", this.props);
-				console.log("로그인 응답", res.data);
+				// console.log("로그인 this.props 무엇?", this.props);
+				console.log("로그인 응답", res);
 				loginChangeHandler();
 				// if(res.)
 				console.log("로그인after this.props 무엇?", this.props);
@@ -121,13 +121,14 @@ class SignIn extends Component {
 									variant="contained"
 									color="primary"
 									onClick={() => this.loginHandler()}
+									disabled={!this.state.password}
 								>
 									공부시작
 								</Button>
 								<Button
 									variant="outlined"
 									color="primary"
-									onClick={() => this.props.history.push("/user/signup")}
+									onClick={() => this.props.history.push("/signup")}
 								>
 									회원가입
 								</Button>
@@ -138,7 +139,7 @@ class SignIn extends Component {
 					<Background>
 						<Wrap1>
 							<Wrap2>
-								<h3>로그인되어 있습니다💕️</h3>
+								<h3>로그인되어 있습니다</h3>
 								<Redirect to="/timer">
 									<Button variant="outlined" color="primary">
 										💻️코딩하러 갈까요?💻️

@@ -39,7 +39,7 @@ class SignUp extends Component {
 		if (isError) {
 			this.setState({
 				username: str,
-				errorText: errorText.nameError,
+				nameError: errorText.nameError,
 			});
 		}
 		if (!isError) {
@@ -53,7 +53,7 @@ class SignUp extends Component {
 	validateEmail = (str) => {
 		let isError = false;
 		const errorText = {};
-		console.log("호출성공", str);
+		// console.log("호출성공", str);
 		if (!str.includes("@")) {
 			isError = true;
 			errorText.emailError = "이메일을 입력해주세요";
@@ -139,7 +139,7 @@ class SignUp extends Component {
 			this.setState({
 				password: e.target.value,
 			});
-			console.log(this.state.password);
+			// console.log(this.state.password);
 		}
 	};
 
@@ -161,7 +161,7 @@ class SignUp extends Component {
 				password: password,
 			})
 			.then((res) => {
-				this.props.history.push("/user/signin");
+				this.props.history.push("/signin");
 			})
 			.catch((err) => console.log(err));
 	};
@@ -181,7 +181,7 @@ class SignUp extends Component {
 							name="name"
 							type="name"
 							label="Nickname"
-							onKeyUp={(name) => this.nameChangeHandler(name)}
+							onChange={(name) => this.nameChangeHandler(name)}
 							error={this.state.nameError === "" ? false : true}
 							helperText={this.state.nameError}
 						/>
@@ -222,6 +222,8 @@ class SignUp extends Component {
 							variant="contained"
 							type="submit"
 							color="primary"
+							disabled={!this.state.password2}
+							// 더 좋은 방법있는지 찾아보기
 							onClick={() => this.joinHandler()}
 						>
 							가입
