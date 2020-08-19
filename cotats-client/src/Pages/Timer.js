@@ -58,11 +58,17 @@ function Timer(props) {
     run();
     setInterv(setInterval(run, 10));
   };
-  const stop = () => {
+  const pause = () => {
     clearInterval(interv);
     setStatus(2);
-    postTime();
   };
+  const stop = () => {
+    clearInterval(interv);
+    setTime({ ms: 0, s: 0, m: 0, h: 0 });
+    postTime();
+    setStatus(2);
+  };
+
   const open = () => {
     setMenuStatus(false);
   };
@@ -106,62 +112,73 @@ function Timer(props) {
           (mydata) =>
             mydata.user_id === JSON.parse(window.sessionStorage.user).id
         );
-        // JSON.parse(window.sessionStorage.user.id)
+        let hourData = Math.floor(myData[0].savetime / 3600);
+        let minData = Math.floor(
+          (myData[0].savetime - Math.floor(myData[0].savetime / 3600) * 3600) /
+            60
+        );
+        let secData = Number(
+          myData[0].savetime -
+            Math.floor(myData[0].savetime / 3600) * 3600 -
+            Math.floor(
+              (myData[0].savetime -
+                Math.floor(myData[0].savetime / 3600) * 3600) /
+                60
+            ) *
+              60
+        );
+
         ReactDOM.render(
           <div>
             <div>{`${new Date().getMonth() + 1}/${new Date().getDate()}`}</div>
             <div className="mydata">
               <div className="myname">{myData[0].user.username}</div>
-              <div className="mytime">{`${
-                Math.floor(myData[0].savetime / 3600) +
-                " : " +
-                Math.floor(
-                  (myData[0].savetime -
-                    Math.floor(myData[0].savetime / 3600) * 3600) /
-                    60
-                ) +
-                " : " +
-                Number(
-                  myData[0].savetime -
-                    Math.floor(myData[0].savetime / 3600) * 3600 -
-                    Math.floor(
-                      (myData[0].savetime -
-                        Math.floor(myData[0].savetime / 3600) * 3600) /
-                        60
-                    ) *
-                      60
-                )
-              }`}</div>
+              <div className="mytime">
+                <span>{hourData >= 10 ? hourData : "0" + hourData}</span>
+                &nbsp;:&nbsp;
+                <span>{minData >= 10 ? minData : "0" + minData}</span>
+                &nbsp;:&nbsp;
+                <span>{secData >= 10 ? secData : "0" + secData}</span>
+              </div>
               <div className="ranking">{myData[0].ranking}</div>
             </div>
             <div>
               {data
                 .filter((rank, index) => index < 10)
                 .map((student, index) => {
+                  let s_hourData = Math.floor(student.savetime / 3600);
+                  let s_minData = Math.floor(
+                    (student.savetime -
+                      Math.floor(student.savetime / 3600) * 3600) /
+                      60
+                  );
+                  let s_secData = Number(
+                    student.savetime -
+                      Math.floor(student.savetime / 3600) * 3600 -
+                      Math.floor(
+                        (student.savetime -
+                          Math.floor(student.savetime / 3600) * 3600) /
+                          60
+                      ) *
+                        60
+                  );
                   return (
                     <ul key={index}>
                       <li>{index + 1}</li>
                       <li>{student.user.username}</li>
-                      <li>{`${
-                        Math.floor(student.savetime / 3600) +
-                        " : " +
-                        Math.floor(
-                          (student.savetime -
-                            Math.floor(student.savetime / 3600) * 3600) /
-                            60
-                        ) +
-                        " : " +
-                        Number(
-                          student.savetime -
-                            Math.floor(student.savetime / 3600) * 3600 -
-                            Math.floor(
-                              (student.savetime -
-                                Math.floor(student.savetime / 3600) * 3600) /
-                                60
-                            ) *
-                              60
-                        )
-                      }`}</li>
+                      <li>
+                        <span>
+                          {s_hourData >= 10 ? s_hourData : "0" + s_hourData}
+                        </span>
+                        &nbsp;:&nbsp;
+                        <span>
+                          {s_minData >= 10 ? s_minData : "0" + s_minData}
+                        </span>
+                        &nbsp;:&nbsp;
+                        <span>
+                          {s_secData >= 10 ? s_secData : "0" + s_secData}
+                        </span>
+                      </li>
                     </ul>
                   );
                 })}
@@ -187,7 +204,13 @@ function Timer(props) {
           />
 
           <DisplayTimer time={time} />
-          <Btn start={start} stop={stop} status={status} posttime={postTime} />
+          <Btn
+            start={start}
+            stop={stop}
+            status={status}
+            pause={pause}
+            posttime={postTime}
+          />
         </Background>
       ) : (
         <Redirect from="*" to="/" />
