@@ -53,11 +53,11 @@ class App extends Component {
                 exact
                 path="/"
                 render={() => {
-                  if (isLogin) {
-                    return <Redirect to="/timer" />;
-                  } else {
-                    return <Route path="/" component={Home} />;
-                  }
+                  return (
+                    <Route path="/">
+                      <Home isLogin={isLogin} />
+                    </Route>
+                  );
                 }}
               />
               <Route
