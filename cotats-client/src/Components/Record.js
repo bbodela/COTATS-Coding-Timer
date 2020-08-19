@@ -22,7 +22,7 @@ const Record = (props) => {
           />
         </Button>
 
-        <div id="ranking"></div>
+        <div id="rankingtable"></div>
       </div>
     </div>
   );

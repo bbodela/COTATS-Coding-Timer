@@ -13,8 +13,19 @@ class SignIn extends Component {
       email: "",
       emailError: "",
       password: "",
+      provider: "",
     };
   }
+
+  doSignUp = () => {
+    const { email, provider, username } = this.state;
+
+    window.sessionStorage.setItem("email", email);
+    window.sessionStorage.setItem("provider", provider);
+    window.seesionStorage.setItem("username", username);
+    this.props.loginChangeHandler();
+    this.props.history.push("/user/signin");
+  };
 
   validateEmail = (str) => {
     let isError = false;
@@ -69,9 +80,11 @@ class SignIn extends Component {
         password: password,
       })
       .then((res) => {
+        console.log(res);
         console.log("로그인 this.props 무엇?", this.props);
+        window.sessionStorage.setItem("user", JSON.stringify(res.data));
+        console.log(res.data.id, "res.data");
         loginChangeHandler();
-        console.log("로그인after this.props 무엇?", this.props);
         if (this.props.isLogin === true) {
           this.props.history.push("/timer");
         } else {

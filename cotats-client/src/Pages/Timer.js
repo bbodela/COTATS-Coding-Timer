@@ -10,7 +10,7 @@ import styled from "styled-components";
 import { fakedata } from "../fakedata/fakedata";
 
 function Timer(props) {
-  console.log("타이머props", props);
+  // console.log("타이머props", props);
   //state 변수 및 세팅
   const [time, setTime] = useState({ ms: 0, s: 0, m: 0, h: 0 });
   const [interv, setInterv] = useState();
@@ -45,7 +45,9 @@ function Timer(props) {
   };
   const start = () => {
     axios
-      .post("http://localhost:4000/timer")
+      .post("http://3.18.213.157:5000/time/timestart", {
+        user_id: JSON.parse(window.sessionStorage.user).id,
+      })
       .then((res) => {
         console.log("timer start부분 res", res);
       })
@@ -72,13 +74,13 @@ function Timer(props) {
     let today = `${new Date().getFullYear()}/${
       new Date().getMonth() + 1
     }/${new Date().getDate()}`;
-    console.log(`${time.h}:${time.m}:${time.s}`, today);
+    // console.log(`${time.h}:${time.m}:${time.s}`, today);
+    console.log(time.h * 3600 + time.m * 60 + time.s, "초단위 테스트");
     axios
-      .post("http://localhost:4000/timer", {
-        savetime: `${time.h}:${time.m}:${time.s}`,
-        // day: today,
-        // username: props.userinfo.username,
-        // id: props.userinfo.id, //userid
+      .post("http://3.18.213.157:5000/time/timepause", {
+        // savetime: `${time.h}:${time.m}:${time.s}`,
+        savetime: time.h * 3600 + time.m * 60 + time.s,
+        user_id: JSON.parse(window.sessionStorage.user).id,
       })
       .then((res) => {
         console.log("timer stop부분 res expect:time,day,userId", res);
@@ -93,39 +95,79 @@ function Timer(props) {
         params: { test: "gettest" },
       })
       .then((res) => {
-        console.log("refresh res test", res);
-        let myData;
-        let index;
-        let rankingData = [];
-        for (let i = 0; i < fakedata.length; i += 1) {
-          if (fakedata[i].id === 4) {
-            myData = fakedata[i];
-          }
-        }
-        for (let i = 0; i < 10; i += 1) {
-          rankingData.push(fakedata[i]);
-        }
+        console.log("refresh res test", res.data);
+        // let myData;
+        let data = res.data;
+        console.log(
+          JSON.parse(window.sessionStorage.user).id,
+          "window.sessionStorage"
+        );
+        let myData = data.filter(
+          (mydata) =>
+            mydata.user_id === JSON.parse(window.sessionStorage.user).id
+        );
+        // JSON.parse(window.sessionStorage.user.id)
         ReactDOM.render(
           <div>
             <div>{`${new Date().getMonth() + 1}/${new Date().getDate()}`}</div>
             <div className="mydata">
-              <div className="myname">{myData.username}</div>
-              <div className="mytime">{myData.time}</div>
-              <div className="ranking">{myData.id}</div>
+              <div className="myname">{myData[0].user.username}</div>
+              <div className="mytime">{`${
+                Math.floor(myData[0].savetime / 3600) +
+                " : " +
+                Math.floor(
+                  (myData[0].savetime -
+                    Math.floor(myData[0].savetime / 3600) * 3600) /
+                    60
+                ) +
+                " : " +
+                Number(
+                  myData[0].savetime -
+                    Math.floor(myData[0].savetime / 3600) * 3600 -
+                    Math.floor(
+                      (myData[0].savetime -
+                        Math.floor(myData[0].savetime / 3600) * 3600) /
+                        60
+                    ) *
+                      60
+                )
+              }`}</div>
+              <div className="ranking">{myData[0].ranking}</div>
             </div>
             <div>
-              {rankingData.map((data, index) => {
-                return (
-                  <ul key={index}>
-                    <li>{index + 1}</li>
-                    <li>{data.username}</li>
-                    <li>{data.time}</li>
-                  </ul>
-                );
-              })}
+              {data
+                .filter((rank, index) => index < 10)
+                .map((student, index) => {
+                  return (
+                    <ul key={index}>
+                      <li>{index + 1}</li>
+                      <li>{student.user.username}</li>
+                      <li>{`${
+                        Math.floor(student.savetime / 3600) +
+                        " : " +
+                        Math.floor(
+                          (student.savetime -
+                            Math.floor(student.savetime / 3600) * 3600) /
+                            60
+                        ) +
+                        " : " +
+                        Number(
+                          student.savetime -
+                            Math.floor(student.savetime / 3600) * 3600 -
+                            Math.floor(
+                              (student.savetime -
+                                Math.floor(student.savetime / 3600) * 3600) /
+                                60
+                            ) *
+                              60
+                        )
+                      }`}</li>
+                    </ul>
+                  );
+                })}
             </div>
           </div>,
-          document.getElementById("ranking")
+          document.getElementById("rankingtable")
         );
       })
       .catch((err) => {

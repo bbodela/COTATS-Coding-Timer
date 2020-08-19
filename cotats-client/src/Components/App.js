@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import theme from "../theme";
+import axios from "axios";
 
 import Home from "Pages/Home";
 import SignIn from "Pages/SignIn";
@@ -17,78 +18,120 @@ class App extends Component {
 
     this.state = {
       isLogin: false,
+      isReady: false,
     };
   }
 
   // handle login state
+  // loginChangeHandler = () => {
+  //   const { isLogin } = this.state;
+  //   this.setState({
+  //     isLogin: !isLogin,
+  //   });
+  // };
+
   loginChangeHandler = () => {
     const { isLogin } = this.state;
     this.setState({
-      isLogin: !isLogin,
+      isLogin: true,
     });
   };
 
-  // componentDidMount = () => {
-  // 	const { isLogin } = this.state;
-  // 	// 로그인 된 상태이면 로그인 풀고
-  // 	// 로그아웃된 상태이면 로그인 시킨?
-  // 	if (!isLogin) {
-  // 		this.loginChangeHandler();
-  // 	}
+  logoutChangeHandler = () => {
+    const { isLogin } = this.state;
+    this.setState({
+      isLogin: false,
+    });
+
+    window.sessionStorage.clear();
+  };
+
+  // readyChange = () => {
+  //   const { isReady } = this.state;
+  //   this.setState({
+  //     isReady: !isReady,
+  //   });
   // };
+  checkLoginStatus = () => {
+    axios.get("http://3.18.213.157:5000/user/signin").then((res) => {
+      if (res.data.logged_in && this.state.isLogin === false) {
+        console.log(res.data);
+        this.setState({ isLogin: true });
+      } else if (!res.data.logged_in && this.state.isLogin === true) {
+        this.setState({ isLogin: false });
+      }
+    });
+  };
+
+  componentDidMount = () => {
+    const email = window.sessionStorage.getItem("email");
+
+    if (email) {
+      this.loginChangeHandler();
+    } else {
+      this.logoutChangeHandler();
+    }
+  };
 
   render() {
-    const { isLogin } = this.state;
     return (
-      <Fragment>
-        <ThemeProvider theme={theme}>
-          <GlobalStyle />
-          <Container>
-            <BrowserRouter>
-              <Header
-                isLogin={isLogin}
-                loginChangeHandler={() => this.loginChangeHandler()}
-              />
-              <Route
-                exact
-                path="/"
-                render={() => {
-                  if (isLogin) {
-                    return <Redirect to="/Timer" />;
-                  } else {
-                    return <Route path="/" component={Home} />;
-                  }
-                }}
-              />
-              <Route
-                path="/user/signin"
-                render={() => (
-                  <SignIn
-                    isLogin={isLogin}
-                    loginChangeHandler={() => this.loginChangeHandler()}
-                    // handleLogoutChange={() => this.handleLogoutChange()}
-                  />
-                )}
-              />
-              <Route
-                path="/user/signup"
-                render={() => <SignUp isLogin={isLogin} />}
-              />
-              <Route
-                path="/timer"
-                render={() => (
-                  <Timer
-                    isLogin={isLogin}
-                    // loginChangeHandler={() => this.loginChangeHandler()}
-                  />
-                )}
-              />
-              <Redirect from="*" to="/" />
-              <Footer />
-            </BrowserRouter>
-          </Container>
-        </ThemeProvider>
-      </Fragment>
+      <>
+        <Fragment>
+          <ThemeProvider theme={theme}>
+            <GlobalStyle />
+            <Container>
+              <BrowserRouter>
+                <Header
+                  isLogin={this.state.isLogin}
+                  loginChangeHandler={() => this.loginChangeHandler()}
+                  logoutChangeHandler={() => this.logoutChangeHandler()}
+                />
+                <Route
+                  exact
+                  path="/"
+                  render={() => {
+                    if (this.state.isLogin) {
+                      return <Redirect to="/Timer" />;
+                    } else {
+                      return <Route path="/" component={Home} />;
+                    }
+                  }}
+                />
+                <Route
+                  path="/user/signin"
+                  render={() => (
+                    <SignIn
+                      isLogin={this.state.isLogin}
+                      loginChangeHandler={() => this.loginChangeHandler()}
+                      // handleLogoutChange={() => this.handleLogoutChange()}
+                    />
+                  )}
+                />
+                <Route
+                  path="/user/signup"
+                  render={() => <SignUp isLogin={this.state.isLogin} />}
+                />
+                <Route
+                  path="/timer"
+                  render={() => (
+                    <Timer
+                      isLogin={this.state.isLogin}
+                      // loginChangeHandler={() => this.loginChangeHandler()}
+                    />
+                  )}
+                />
+                <Redirect from="*" to="/" />
+                <Footer />
+              </BrowserRouter>
+            </Container>
+          </ThemeProvider>
+        </Fragment>
+        {/* {this.state.isReady === true ? (
+          
+        ) : (
+          <div>loading</div>
+        )} */}
+      </>
     );
   }
 }
