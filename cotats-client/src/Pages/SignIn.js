@@ -126,7 +126,7 @@ class SignIn extends Component {
 								<Button
 									variant="outlined"
 									color="primary"
-									onClick={() => this.props.history.push("/user/signup")}
+									onClick={() => this.props.history.push("/signup")}
 								>
 									회원가입
 								</Button>
