@@ -62,9 +62,7 @@ class App extends Component {
   };
 
   componentDidMount = () => {
-    const email = window.sessionStorage.getItem("email");
-
-    if (email) {
+    if (window.sessionStorage.user) {
       this.loginChangeHandler();
     } else {
       this.logoutChangeHandler();
@@ -82,6 +80,7 @@ class App extends Component {
               <Header
                 isLogin={isLogin}
                 loginChangeHandler={() => this.loginChangeHandler()}
+                logoutChangeHandler={() => this.logoutChangeHandler()}
               />
               <Route
                 exact
@@ -100,6 +99,7 @@ class App extends Component {
                   <SignIn
                     isLogin={isLogin}
                     loginChangeHandler={() => this.loginChangeHandler()}
+                    logoutChangeHandler={() => this.logoutChangeHandler()}
                     // handleLogoutChange={() => this.handleLogoutChange()}
                   />
                 )}

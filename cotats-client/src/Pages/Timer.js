@@ -104,14 +104,22 @@ function Timer(props) {
         console.log("refresh res test", res.data);
         // let myData;
         let data = res.data;
+
         console.log(
           JSON.parse(window.sessionStorage.user).id,
           "window.sessionStorage"
         );
+
         let myData = data.filter(
           (mydata) =>
             mydata.user_id === JSON.parse(window.sessionStorage.user).id
         );
+        if (myData.length === 0) {
+          myData = [
+            { savetime: 0, user: { username: "start를 눌러 시작해주세요!" } },
+          ];
+        }
+
         let hourData = Math.floor(myData[0].savetime / 3600);
         let minData = Math.floor(
           (myData[0].savetime - Math.floor(myData[0].savetime / 3600) * 3600) /

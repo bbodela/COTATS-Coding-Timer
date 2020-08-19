@@ -162,7 +162,8 @@ class SignUp extends Component {
         password: password,
       })
       .then((res) => {
-        this.props.history.push("/user/signin");
+        console.log(res);
+        this.props.history.push("/signin");
       })
       .catch((err) => console.log(err));
   };

@@ -51,8 +51,7 @@ const Header = (props) => {
           <div className="logo">
             <BlinkingLogo>
               <Anchor to="/">
-                {/* <img src={logo} /> */}
-                logo자리
+                <img src={logo} width="120" height="30" alt="logo" />
               </Anchor>
             </BlinkingLogo>
           </div>
