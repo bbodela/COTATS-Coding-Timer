@@ -3,8 +3,6 @@ import { BrowserRouter, Route, Redirect } from "react-router-dom";
 import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 import axios from "axios";
 import theme from "../theme";
-import axios from "axios";
-
 import Home from "Pages/Home";
 import SignIn from "Pages/SignIn";
 import SignUp from "Pages/SignUp";
