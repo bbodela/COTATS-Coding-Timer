@@ -1,29 +1,40 @@
 import React from "react";
 import Record from "./Record";
 import { Button } from "@material-ui/core";
-import { fakedata } from "fakedata/fakedata";
+import MenuIcon from "@material-ui/icons/Menu";
+
 import styled from "styled-components";
 
 function Hamburger(props) {
-  return (
-    <div>
-      {props.status === true ? (
-        <Record open={props.open} fakedata={fakedata} refresh={props.refresh} />
-      ) : (
-        ""
-      )}
-      {props.status === false ? (
-        <Button
-          variant="outlined"
-          color="primary"
-          className="openBtn"
-          onClick={props.close}>
-          Ranking
-        </Button>
-      ) : (
-        ""
-      )}
-    </div>
-  );
+	return (
+		<SList>
+			{props.status === true ? (
+				<Record open={props.open} refresh={props.refresh} />
+			) : (
+				""
+			)}
+			{props.status === false ? (
+				<Button>
+					<MenuIcon
+						className="openBtn"
+						fontSize="large"
+						onClick={props.close}
+						style={{
+							color: "white",
+							fontSize: 35,
+						}}
+					/>
+				</Button>
+			) : (
+				""
+			)}
+		</SList>
+	);
 }
+
+const SList = styled.div`
+	position: absolute;
+	right: 30px;
+`;
+
 export default Hamburger;

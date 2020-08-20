@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import logo from "../img/cotats_w.png";
+import logo from "../img/cotats_w_inner.png";
+
+import { Link } from "react-router-dom";
 
 const Home = (props) => {
 	return (
@@ -8,15 +10,16 @@ const Home = (props) => {
 			{props.isLogin === false ? (
 				<Container>
 					<SLogo>
-						<img src={logo} />
+						<img src={logo} alt="logo" />
 					</SLogo>
 				</Container>
 			) : (
 				// 공부화면으로 갈 수 있는 버튼 링크
 				<Container>
-					<SLogo>
-						<img src={logo} />
-					</SLogo>
+					<LogoLink to="/timer">
+						<img src={logo} alt="logo" />
+					</LogoLink>
+					{/* <TimerButton>공부화면</TimerButton> */}
 				</Container>
 			)}
 		</>
@@ -24,21 +27,34 @@ const Home = (props) => {
 };
 
 const Container = styled.div`
-	min-height: 100vh;
-	width: 100%;
+	max-height: 100vh;
 	background-color: #212121;
 	display: flex;
-	flex-direction: column;
-	padding: 1rem;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	margin: 0;
 	& * {
-		box-sizing: border-box;
 		font-family: "Source Sans Pro";
 	}
 `;
 
 const SLogo = styled.div`
-	text-align: center;
-	margin: 200px 0 0 0;
+	position: relative;
+	overflow: hidden;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 `;
+
+const LogoLink = styled(Link)`
+	position: relative;
+	overflow: hidden;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+`;
+
+// const TimerButton = styled.button``;
 
 export default Home;

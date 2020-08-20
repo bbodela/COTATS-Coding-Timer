@@ -1,122 +1,241 @@
-import React from "react";
+import React, { useState } from "react";
 import styled, { keyframes } from "styled-components";
-import { darken, lighten } from "polished";
-import { Link, withRouter, Route } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import axios from "axios";
-import logo from "../img/cotats_g.png";
+import logo from "../img/cotats_g_inner.png";
+import Hamburger from "Components/Hamburger";
+import ReactDOM from "react-dom";
 
-const Header = (props) => {
-  console.log("헤더props", props);
-  const logoutHandler = () => {
-    axios
-      .post("http://3.18.213.157:5000/user/signout")
-      .then((res) => {
-        console.log("헤더signout버튼클릭 시 res", res);
-        // 서버에서 세션파괴해주면 isLogin을 !isLogin으로 바꾸고
-        props.loginChangeHandler();
-        props.history.push("/");
-        // 서버에 최종 시간 다시한번 저장해야할까요.??????
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+function Header(props) {
+	const [status, setStatus] = useState(0);
+	const [menuStatus, setMenuStatus] = useState(false);
 
-  const loginBtnHandler = () => {
-    props.history.push("/signin");
-  };
+	const logoutHandler = () => {
+		axios
+			.post("http://52.79.251.147:5000/user/signout")
+			.then((res) => {
+				console.log("헤더signout버튼클릭 시 res", res);
+				props.logoutChangeHandler();
+				props.history.push("/");
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
 
-  const joinBtnHandler = () => {
-    props.history.push("/signup");
-  };
+	const open = () => {
+		setMenuStatus(false);
+	};
+	const close = () => {
+		refresh();
+		setMenuStatus(true);
+	};
+	const refresh = () => {
+		axios
+			.get("http://52.79.251.147:5000/time/timerank", {
+				params: { test: "gettest" },
+			})
+			.then((res) => {
+				console.log("refresh res test", res.data);
+				// let myData;
+				let data = res.data;
+				console.log(
+					JSON.parse(window.sessionStorage.user).id,
+					"window.sessionStorage"
+				);
+				let myData = data.filter(
+					(mydata) =>
+						mydata.user_id === JSON.parse(window.sessionStorage.user).id
+				);
+				if (myData.length === 0) {
+					myData = [
+						{ savetime: 0, user: { username: "start를 눌러 시작해주세요!" } },
+					];
+				}
+				let hourData = Math.floor(myData[0].savetime / 3600);
+				let minData = Math.floor(
+					(myData[0].savetime - Math.floor(myData[0].savetime / 3600) * 3600) /
+						60
+				);
+				let secData = Number(
+					myData[0].savetime -
+						Math.floor(myData[0].savetime / 3600) * 3600 -
+						Math.floor(
+							(myData[0].savetime -
+								Math.floor(myData[0].savetime / 3600) * 3600) /
+								60
+						) *
+							60
+				);
 
-  return (
-    <>
-      {props.isLogin === false ? (
-        <HeaderContainer>
-          <MenuBtn>
-            <Button onClick={() => loginBtnHandler()}>로그인</Button>
-            <Button onClick={() => joinBtnHandler()}>회원가입</Button>
-          </MenuBtn>
-        </HeaderContainer>
-      ) : (
-        <HeaderContainer>
-          <BlinkingLogo>
-            <Anchor to="/">
-              <img src={logo} width="100" height="25" alt="logo" />
-            </Anchor>
-          </BlinkingLogo>
-          <MenuBtn>
-            <Button onClick={() => logoutHandler()}>로그아웃</Button>
-          </MenuBtn>
-        </HeaderContainer>
-      )}
-    </>
-  );
-};
+				ReactDOM.render(
+					<div>
+						<div>{`${new Date().getMonth() + 1}/${new Date().getDate()}`}</div>
+
+						<div className="mydata">
+							<div className="myname">{myData[0].user.username}</div>
+							<div className="mytime">
+								<span>{hourData >= 10 ? hourData : "0" + hourData}</span>
+								&nbsp;:&nbsp;
+								<span>{minData >= 10 ? minData : "0" + minData}</span>
+								&nbsp;:&nbsp;
+								<span>{secData >= 10 ? secData : "0" + secData}</span>
+							</div>
+							<div className="ranking">{myData[0].ranking}</div>
+						</div>
+						<div>
+							{data
+								.filter((rank, index) => index < 10)
+								.map((student, index) => {
+									let s_hourData = Math.floor(student.savetime / 3600);
+									let s_minData = Math.floor(
+										(student.savetime -
+											Math.floor(student.savetime / 3600) * 3600) /
+											60
+									);
+									let s_secData = Number(
+										student.savetime -
+											Math.floor(student.savetime / 3600) * 3600 -
+											Math.floor(
+												(student.savetime -
+													Math.floor(student.savetime / 3600) * 3600) /
+													60
+											) *
+												60
+									);
+									return (
+										<RecordList key={index}>
+											<>{index + 1}</>
+											<li>{student.user.username}</li>
+											<li>
+												<span>
+													{s_hourData >= 10 ? s_hourData : "0" + s_hourData}
+												</span>
+												&nbsp;:&nbsp;
+												<span>
+													{s_minData >= 10 ? s_minData : "0" + s_minData}
+												</span>
+												&nbsp;:&nbsp;
+												<span>
+													{s_secData >= 10 ? s_secData : "0" + s_secData}
+												</span>
+											</li>
+										</RecordList>
+									);
+								})}
+						</div>
+					</div>,
+					document.getElementById("rankingtable")
+				);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
+
+	return (
+		<>
+			{props.isLogin === false ? (
+				<HeaderContainer>
+					<MenuBtn>
+						<Anchor to="/signin">
+							<Stext>Sign In</Stext>
+						</Anchor>
+						<Anchor to="/signup">
+							<Stext>JOIN</Stext>
+						</Anchor>
+					</MenuBtn>
+				</HeaderContainer>
+			) : (
+				<HeaderContainer>
+					<BlinkingLogo>
+						<Anchor to="/">
+							<img src={logo} width="100" height="25" alt="logo" />
+						</Anchor>
+					</BlinkingLogo>
+					<MenuBtn>
+						<Anchor to="/" onClick={() => logoutHandler()}>
+							<Stext>Sign Out</Stext>
+						</Anchor>
+						<Hamburger
+							open={open}
+							close={close}
+							status={menuStatus}
+							refresh={refresh}
+							setIsLogin={props.setIsLogin}
+						/>
+					</MenuBtn>
+				</HeaderContainer>
+			)}
+		</>
+	);
+}
 
 const HeaderContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #eeeeee;
-  padding: 5px 10px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 5px 10px;
 
-  .logo {
-    padding: 15px 0 10px 15px;
-  }
+	.logo {
+		padding: 15px 0 10px 15px;
+	}
 
-  @media screen and (max-width: 600px) {
-    flex-direction: column;
-    align-items: flex-start;
-
-    padding-left: 0;
-    padding-right: 0;
-  }
-`;
-
-const blink = keyframes`
-  50% {
-		opacity: 0;
+	@media screen and (max-width: 600px) {
+		flex-direction: column;
+		align-content: flex-start;
+		padding-top: 10px;
+		padding-left: 0;
+		padding-right: 0;
 	}
 `;
 
+const blink = keyframes`
+			50% {
+				opacity: 0;
+			}
+		`;
+
 const BlinkingLogo = styled.div`
-  animation: ${blink} 1s linear infinite;
-  text-decoration: none;
+	animation: ${blink} 1s linear infinite;
+	text-decoration: none;
 `;
 
 const Anchor = styled(Link)`
-  text-decoration: none;
+	text-decoration: none;
 `;
 
-const Button = styled.button`
-  cursor: pointer;
-  outline: none;
-  border: none;
-  border-radius: 4px;
-  padding: 10px 18px 10px 18px;
-  margin: 15px 10px 15px 10px;
-  background: #eeeeee;
-  &:hover {
-    background: ${lighten(0.2, "#cfd8dc")};
-  }
+const Stext = styled.a`
+	color: whitesmoke;
+	font-size: 20px;
+	padding-top: 10px;
+	padding: 15px;
 
-  @media screen and (max-width: 600px) {
-    padding: 3px 5px 3px 5px;
-    margin: 5px 0px 10px 15px;
-  }
+	&:hover {
+		font-size: 140%;
+		color: lightslategrey;
+	}
+	&:link {
+		color: white;
+	}
+	&:visited {
+		color: white;
+		text-decoration: none;
+	}
 `;
 
 const MenuBtn = styled.div`
-  display: flex;
-  padding-left: 0;
-  justify-content: right;
+	display: flex;
+	padding-left: 0;
 
-  @media screen and (max-width: 600px) {
-    flex-direction: column;
-    justify-content: right;
-  }
+	@media screen and (max-width: 600px) {
+		flex-direction: column;
+	}
+`;
+
+const RecordList = styled.ul`
+	list-style: none;
 `;
 
 export default withRouter(Header);
