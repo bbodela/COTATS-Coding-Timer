@@ -1,5 +1,4 @@
 import React from "react";
-<<<<<<< HEAD
 import styled, { createGlobalStyle } from "styled-components";
 function DisplayTimer(props) {
   return (
@@ -19,34 +18,7 @@ function DisplayTimer(props) {
       <Ms>{props.time.ms >= 10 ? props.time.ms : "0" + props.time.ms}</Ms>
     </b>
   );
-=======
-import styled from "styled-components";
-
-function DisplayTimer(props) {
-	return (
-		<SDisplay>
-			<span>{props.time.h >= 10 ? props.time.h : "0" + props.time.h}</span>
-			&nbsp;:&nbsp;
-			<span>{props.time.m >= 10 ? props.time.m : "0" + props.time.m}</span>
-			&nbsp;:&nbsp;
-			<span>{props.time.s >= 10 ? props.time.s : "0" + props.time.s}</span>
-			&nbsp;:&nbsp;
-			<span>{props.time.ms >= 10 ? props.time.ms : "0" + props.time.ms}</span>
-		</SDisplay>
-	);
->>>>>>> 13f1ddf2d3f4eadc13401b89133797a170c856cf
 }
-
-const SDisplay = styled.div`
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: tranlate(-50%, -50%);
-	color: #17d4fe;
-	font-size: 80px;
-	letter-spacing: 7px;
-	font-weight: bold;
-`;
 
 export default DisplayTimer;
 
