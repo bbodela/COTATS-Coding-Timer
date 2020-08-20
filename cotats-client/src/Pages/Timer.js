@@ -75,7 +75,7 @@ function Timer(props) {
 		// console.log(`${time.h}:${time.m}:${time.s}`, today);
 		console.log(time.h * 3600 + time.m * 60 + time.s, "초단위 테스트");
 		axios
-			.post("http://52.79.251.147/time/timepause", {
+			.post("http://52.79.251.147:5000/time/timepause", {
 				// savetime: `${time.h}:${time.m}:${time.s}`,
 				savetime: time.h * 3600 + time.m * 60 + time.s,
 				user_id: JSON.parse(window.sessionStorage.user).id,

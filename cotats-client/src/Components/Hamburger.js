@@ -9,7 +9,12 @@ function Hamburger(props) {
 	return (
 		<SList>
 			{props.status === true ? (
-				<Record open={props.open} refresh={props.refresh} />
+				<Record
+					open={props.open}
+					refresh={props.refresh}
+					weekly={props.weekly}
+					monthly={props.monthly}
+				/>
 			) : (
 				""
 			)}

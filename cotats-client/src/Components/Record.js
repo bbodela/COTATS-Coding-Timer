@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@material-ui/core";
 import RefreshRoundedIcon from "@material-ui/icons/RefreshRounded";
 import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
 import {
 	Dialog,
+	List,
+	ListItem,
 	DialogActions,
 	DialogContent,
 	DialogTitle,
@@ -12,46 +14,77 @@ import {
 } from "@material-ui/core";
 import styled from "styled-components";
 
-const Record = (props) => {
+function Record(props) {
+	// const [listStatus, setListStatus]=useState("refresh")
+	// console.log("Record>>>>>", props);
+	// console.log(props.open); //상태를 바꾸는
+
+	// const defaultBtn = () => {
+
+	// }
+
 	return (
 		<div>
 			<div className="hamburgerMenuSide">
 				<Dialog
 					open={props.open}
 					aria-labelledby="dialog-title"
-					refresh={props.refresh}
+					refresh={() => props.refresh()}
 				>
-					<DialogTitle id="dialog-title">Ranking....</DialogTitle>
-				</Dialog>
-				//
-				<Button>
 					<CloseRoundedIcon
 						fontSize="large"
-						onClick={props.open}
+						onClick={() => props.open()}
 						style={{
-							color: "white",
+							color: "black",
+							cursor: "pointer",
 						}}
 					/>
-				</Button>
-				<Button>
-					<RefreshRoundedIcon
-						style={{
-							color: "white",
-						}}
-						className="refresh"
-						fontSize="large"
-						onClick={props.refresh}
-					/>
-				</Button>
-				<div id="rankingtable"></div>
+					<Button>
+						<RefreshRoundedIcon
+							style={{
+								color: "black",
+							}}
+							className="refresh"
+							fontSize="large"
+							onClick={props.refresh}
+						/>
+					</Button>
+					<DialogTitle id="dialog-title">
+						<Button
+							style={{
+								color: "black",
+							}}
+							className="weekly"
+							onClick={props.weekly}
+						>
+							weekly
+						</Button>
+						<Button
+							style={{
+								color: "black",
+							}}
+							className="monthly"
+							onClick={props.monthly}
+						>
+							monthly
+						</Button>
+					</DialogTitle>
+					<List>{/* {받아온 데이터} */}</List>
+
+					<div id="rankingtable"></div>
+				</Dialog>
 			</div>
 		</div>
 	);
-};
+}
 
-const SList = styled.div`
-	position: absolute;
-	right: 30px;
+const SList = styled(List)`
+	background-color: #212121;
 `;
+
+// const SList = styled.div`
+// 	position: absolute;
+// 	right: 30px;
+// `;
 
 export default Record;
