@@ -24,14 +24,14 @@ class App extends Component {
   loginChangeHandler = () => {
     const { isLogin } = this.state;
     this.setState({
-      isLogin: !isLogin,
+      isLogin: true,
     });
   };
   logoutChangeHandler = () => {
     window.sessionStorage.clear();
     const { isLogin } = this.state;
     this.setState({
-      isLogin: !isLogin,
+      isLogin: false,
     });
   };
 
