@@ -106,12 +106,13 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
 		height: 100%;
-	width: 100%;
+		width: 100%;
 	}
 `;
 
 const Container = styled.div`
-  background-color: #212121;
+  background: linear-gradient(to right, #000000, #434343);
+  color: white;
   & * {
     box-sizing: border-box;
     font-family: "Source Sans Pro";
