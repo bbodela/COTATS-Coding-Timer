@@ -1,20 +1,15 @@
 // signOut 기능을 할 수 있는 버튼을 여기에
 import React, { useState } from "react";
-import ReactDOM from "react-dom";
 import axios from "axios";
 import DisplayTimer from "Components/DisplayTimer";
 import Btn from "Components/Btn";
-import Hamburger from "Components/Hamburger";
 import { Redirect } from "react-router-dom";
 import styled from "styled-components";
 
 function Timer(props) {
-  // console.log("타이머props", props);
-  //state 변수 및 세팅
   const [status, setStatus] = useState(0);
   const [time, setTime] = useState({ ms: 0, s: 0, m: 0, h: 0 });
   const [interv, setInterv] = useState();
-  //0: 처음 상태, 1: 타이머 돌아가는 상태, 2: 일시정지 상태
 
   //timer 변수
   let updatedH = time.h;

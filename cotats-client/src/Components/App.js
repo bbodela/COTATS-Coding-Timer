@@ -28,12 +28,11 @@ class App extends Component {
     });
   };
   logoutChangeHandler = () => {
+    window.sessionStorage.clear();
     const { isLogin } = this.state;
     this.setState({
       isLogin: !isLogin,
     });
-
-    window.sessionStorage.clear();
   };
 
   componentDidMount = () => {

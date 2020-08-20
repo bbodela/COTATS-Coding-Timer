@@ -7,21 +7,7 @@ import Hamburger from "Components/Hamburger";
 import ReactDOM from "react-dom";
 
 function Header(props) {
-  const [status, setStatus] = useState(0);
   const [menuStatus, setMenuStatus] = useState(false);
-
-  const logoutHandler = () => {
-    axios
-      .post("http://52.79.251.147:5000/user/signout")
-      .then((res) => {
-        console.log("헤더signout버튼클릭 시 res", res);
-        props.logoutChangeHandler();
-        props.history.push("/");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
   const open = () => {
     setMenuStatus(false);
@@ -43,8 +29,12 @@ function Header(props) {
           JSON.parse(window.sessionStorage.user).id,
           "window.sessionStorage"
         );
-        let myData = data.filter(
+        let myRanking = data.findIndex(
           (mydata) =>
+            mydata.user_id === JSON.parse(window.sessionStorage.user).id
+        );
+        let myData = data.filter(
+          (mydata, index) =>
             mydata.user_id === JSON.parse(window.sessionStorage.user).id
         );
         if (myData.length === 0) {
@@ -67,12 +57,11 @@ function Header(props) {
             ) *
               60
         );
-
         ReactDOM.render(
           <div>
             <div>{`${new Date().getMonth() + 1}/${new Date().getDate()}`}</div>
-
             <div className="mydata">
+              <div className="myranking">{myRanking}</div>
               <div className="myname">{myData[0].user.username}</div>
               <div className="mytime">
                 <span>{hourData >= 10 ? hourData : "0" + hourData}</span>
@@ -132,19 +121,23 @@ function Header(props) {
         console.log(err);
       });
   };
-  const weeklyrefresh = () => {
+  const weeklyRefresh = () => {
     axios
-      .get("http://52.79.251.147:5000/timeweekrank", {
+      .get("http://52.79.251.147:5000/time/timeweekrank", {
         params: { test: "gettest" },
       })
       .then((res) => {
-        console.log("refresh res test", res.data);
+        console.log("weeklyrefresh res test", res.data);
         // let myData;
         let data = res.data;
         console.log(
           JSON.parse(window.sessionStorage.user).id,
           "window.sessionStorage"
         );
+        let myRanking = data.findIndex(
+          (mydata) =>
+            mydata.user_id === JSON.parse(window.sessionStorage.user).id
+        );
         let myData = data.filter(
           (mydata) =>
             mydata.user_id === JSON.parse(window.sessionStorage.user).id
@@ -169,12 +162,11 @@ function Header(props) {
             ) *
               60
         );
-
         ReactDOM.render(
           <div>
             <div>{`${new Date().getMonth() + 1}/${new Date().getDate()}`}</div>
-
             <div className="mydata">
+              <div className="myranking">{myRanking}</div>
               <div className="myname">{myData[0].user.username}</div>
               <div className="mytime">
                 <span>{hourData >= 10 ? hourData : "0" + hourData}</span>
@@ -234,19 +226,21 @@ function Header(props) {
         console.log(err);
       });
   };
-  const monthlyrefresh = () => {
+  const monthlyRefresh = () => {
     axios
-      .get("http://52.79.251.147:5000/timemonthrank", {
+      .get("http://52.79.251.147:5000/time/timemonthrank", {
         params: { test: "gettest" },
       })
       .then((res) => {
-        console.log("refresh res test", res.data);
+        console.log("monthlyrefresh res test", res.data);
         // let myData;
         let data = res.data;
-        console.log(
-          JSON.parse(window.sessionStorage.user).id,
-          "window.sessionStorage"
+
+        let myRanking = data.findIndex(
+          (mydata) =>
+            mydata.user_id === JSON.parse(window.sessionStorage.user).id
         );
+
         let myData = data.filter(
           (mydata) =>
             mydata.user_id === JSON.parse(window.sessionStorage.user).id
@@ -271,12 +265,11 @@ function Header(props) {
             ) *
               60
         );
-
         ReactDOM.render(
           <div>
             <div>{`${new Date().getMonth() + 1}/${new Date().getDate()}`}</div>
-
             <div className="mydata">
+              <div className="myranking">{myRanking}</div>
               <div className="myname">{myData[0].user.username}</div>
               <div className="mytime">
                 <span>{hourData >= 10 ? hourData : "0" + hourData}</span>
@@ -336,20 +329,19 @@ function Header(props) {
         console.log(err);
       });
   };
-
   return (
     <>
       {props.isLogin === false ? (
-        <HeaderContainer>
-          <MenuBtn>
-            <Anchor to="/signin">
-              <Stext>Sign In</Stext>
-            </Anchor>
-            <Anchor to="/signup">
-              <Stext>JOIN</Stext>
-            </Anchor>
-          </MenuBtn>
-        </HeaderContainer>
+        <LoginHeaderContainer>
+          <LoginMenuBtn>
+            <LoginAnchor to="/signin">
+              <LoginStext>Sign In</LoginStext>
+            </LoginAnchor>
+            <LoginAnchor to="/signup">
+              <LoginStext>JOIN</LoginStext>
+            </LoginAnchor>
+          </LoginMenuBtn>
+        </LoginHeaderContainer>
       ) : (
         <HeaderContainer>
           <BlinkingLogo>
@@ -357,35 +349,57 @@ function Header(props) {
               <img src={logo} width="100" height="25" alt="logo" />
             </Anchor>
           </BlinkingLogo>
-          <MenuBtn>
-            <Anchor to="/" onClick={() => logoutHandler()}>
-              <Stext>Sign Out</Stext>
-            </Anchor>
+          <Wrapdiv>
             <Hamburger
               open={open}
               close={close}
               status={menuStatus}
               refresh={refresh}
+              weekly={weeklyRefresh}
+              monthly={monthlyRefresh}
               setIsLogin={props.setIsLogin}
-            />
-          </MenuBtn>
+              logout={logoutHandler}></Hamburger>
+          </Wrapdiv>
         </HeaderContainer>
       )}
     </>
   );
 }
-
+const Wrapdiv = styled.div`
+  text-align: center;
+`;
 const HeaderContainer = styled.div`
+  .logo {
+    padding: 15px 0 10px 15px;
+  }
+
+  padding-right: 38px;
+  line-height: 60px;
+  padding-top: 10px;
+  padding-left: 10px;
+  --max-height: 64px;
+  --side-padding: 8px;
+  align-items: stretch;
+  flex: 1 1 auto;
+  position: relative;
   display: flex;
-  flex-direction: column;
+  @media screen and (max-width: 600px) {
+    padding-top: 10px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+`;
+
+const LoginHeaderContainer = styled.div`
+  display: flex;
+
   justify-content: center;
-  align-items: center;
+  padding-top: 50%;
   padding: 5px 10px;
 
   .logo {
     padding: 15px 0 10px 15px;
   }
-
   @media screen and (max-width: 600px) {
     flex-direction: column;
     align-content: flex-start;
@@ -394,28 +408,21 @@ const HeaderContainer = styled.div`
     padding-right: 0;
   }
 `;
+const LoginMenuBtn = styled.div`
+  align-items: right;
+  display: flex;
+  float: right;
 
-const blink = keyframes`
-			50% {
-				opacity: 0;
-			}
-		`;
-
-const BlinkingLogo = styled.div`
-  animation: ${blink} 1s linear infinite;
-  text-decoration: none;
+  @media screen and (max-width: 600px) {
+    flex-direction: column;
+  }
 `;
-
-const Anchor = styled(Link)`
-  text-decoration: none;
-`;
-
-const Stext = styled.a`
+const LoginStext = styled.a`
+  flex: right;
   color: whitesmoke;
   font-size: 20px;
   padding-top: 10px;
   padding: 15px;
-
   &:hover {
     font-size: 140%;
     color: lightslategrey;
@@ -428,18 +435,30 @@ const Stext = styled.a`
     text-decoration: none;
   }
 `;
+const LoginAnchor = styled(Link)`
+  text-decoration: none;
+`;
 
-const MenuBtn = styled.div`
-  display: flex;
-  padding-left: 0;
+const blink = keyframes`
+			50% {
+				opacity: 0;
+			}
+		`;
+const BlinkingLogo = styled.span`
+  animation: ${blink} 1s linear infinite;
+  text-decoration: none;
+  --max-height: 64px;
+  --side-padding: 8px;
+  align-items: stretch;
+  position: relative;
+  font-weight: 500;
+`;
 
-  @media screen and (max-width: 600px) {
-    flex-direction: column;
-  }
+const Anchor = styled(Link)`
+  text-decoration: none;
 `;
 
 const RecordList = styled.ul`
   list-style: none;
 `;
-
 export default withRouter(Header);
