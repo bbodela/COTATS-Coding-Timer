@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@material-ui/core";
 import RefreshRoundedIcon from "@material-ui/icons/RefreshRounded";
 import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
 import {
   Dialog,
+  List,
+  ListItem,
   DialogActions,
   DialogContent,
   DialogTitle,
@@ -11,23 +13,31 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import styled from "styled-components";
-const Record = (props) => {
+
+function Record(props) {
+  // const [listStatus, setListStatus]=useState("refresh")
+  // console.log("Record>>>>>", props);
+  // console.log(props.open); //상태를 바꾸는
+
+  // const defaultBtn = () => {
+
+  // }
+
   return (
     <div>
-      <hamburgerMenuSide>
+      <div className="hamburgerMenuSide">
         <Dialog
           open={props.open}
           aria-labelledby="dialog-title"
-          refresh={props.refresh}>
-          <Button>
-            <CloseRoundedIcon
-              fontSize="large"
-              onClick={props.open}
-              style={{
-                color: "black",
-              }}
-            />
-          </Button>
+          refresh={() => props.refresh()}>
+          <CloseRoundedIcon
+            fontSize="large"
+            onClick={() => props.open()}
+            style={{
+              color: "black",
+              cursor: "pointer",
+            }}
+          />
           <Button>
             <RefreshRoundedIcon
               style={{
@@ -38,26 +48,40 @@ const Record = (props) => {
               onClick={props.refresh}
             />
           </Button>
-          <Button color="primary" className="weekly" onClick={props.weekly}>
-            weekly
-          </Button>
-          <Button color="primary" className="monthly" onClick={props.monthly}>
-            monthly
-          </Button>
-          <DialogTitle id="dialog-title">Ranking....</DialogTitle>
+          <DialogTitle id="dialog-title">
+            <Button
+              style={{
+                color: "black",
+              }}
+              className="weekly"
+              onClick={props.weekly}>
+              weekly
+            </Button>
+            <Button
+              style={{
+                color: "black",
+              }}
+              className="monthly"
+              onClick={props.monthly}>
+              monthly
+            </Button>
+          </DialogTitle>
+          <List>{/* {받아온 데이터} */}</List>
+
+          <div id="rankingtable"></div>
         </Dialog>
-        //
-        <div id="rankingtable"></div>
-      </hamburgerMenuSide>
+      </div>
     </div>
   );
-};
-const SList = styled.div`
-  position: absolute;
-  right: 30px;
+}
+
+const SList = styled(List)`
+  background-color: #212121;
 `;
-const hamburgerMenuSide = styled.span`
-  float: right;
-  background-color: red;
-`;
+
+// const SList = styled.div`
+// 	position: absolute;
+// 	right: 30px;
+// `;
+
 export default Record;
