@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import styled from "styled-components";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { Typography, TextField, Button } from "@material-ui/core";
 import axios from "axios";
-
+import logo from "../img/cotats_w_inner.png";
 axios.defaults.withCredentials = false;
-
 /* 유효성 검사
 		username: 최소 2글자 이상
 		email: email형식에 부합하도록
@@ -13,7 +12,6 @@ axios.defaults.withCredentials = false;
 		무조건 입력을해야 버튼이 눌러지도록>> 입력값이없으면 일치하는 유저가없어서 어차피 서버응답이 에러
 			// 입력 폼 입력안되면 버튼눌려지지 않는 에러 추가
 	*/
-
 class SignUp extends Component {
 	constructor(props) {
 		super(props);
@@ -29,7 +27,6 @@ class SignUp extends Component {
 			provider: "",
 		};
 	}
-
 	validateName = (str) => {
 		let isError = false;
 		const errorText = {};
@@ -50,11 +47,9 @@ class SignUp extends Component {
 			});
 		}
 	};
-
 	validateEmail = (str) => {
 		let isError = false;
 		const errorText = {};
-		console.log("호출성공", str);
 		if (!str.includes("@")) {
 			isError = true;
 			errorText.emailError = "이메일을 입력해주세요";
@@ -73,11 +68,9 @@ class SignUp extends Component {
 			});
 		}
 	};
-
 	validatePwLeng = (str) => {
 		let isError = false;
 		const errorText = {};
-
 		if (str.length < 6) {
 			isError = true;
 			errorText.pwLengthError = "비밀번호는 6자 이상이어야 합니다";
@@ -95,11 +88,9 @@ class SignUp extends Component {
 			});
 		}
 	};
-
 	validateConfirmPw = (str) => {
 		let isError = false;
 		const errorText = {};
-
 		if (this.state.password !== str) {
 			isError = true;
 			errorText.pwCheckError = "비밀번호가 일치하지 않습니다";
@@ -117,7 +108,6 @@ class SignUp extends Component {
 			});
 		}
 	};
-
 	nameChangeHandler = (e) => {
 		let input = e.target.value;
 		const err = this.validateName(input);
@@ -125,7 +115,6 @@ class SignUp extends Component {
 			this.setState({ username: input });
 		}
 	};
-
 	emailChangeHandler = (e) => {
 		let input = e.target.value;
 		const err = this.validateEmail(input);
@@ -133,17 +122,14 @@ class SignUp extends Component {
 			this.setState({ email: input });
 		}
 	};
-
 	pwChangeHandler = (e) => {
 		const err = this.validatePwLeng(e.target.value);
 		if (!err) {
 			this.setState({
 				password: e.target.value,
 			});
-			console.log(this.state.password);
 		}
 	};
-
 	confirmpwHandler = (e) => {
 		const err = this.validateConfirmPw(e.target.value);
 		if (!err) {
@@ -152,7 +138,6 @@ class SignUp extends Component {
 			});
 		}
 	};
-
 	joinHandler = () => {
 		const { email, password, username } = this.state;
 		axios
@@ -166,11 +151,15 @@ class SignUp extends Component {
 			})
 			.catch((err) => console.log(err));
 	};
-
 	render() {
 		return (
 			<Background>
 				<div>
+					<SLogo>
+						<Anchor to="/">
+							<img src={logo} alt="logo" width="230" height="50" />
+						</Anchor>
+					</SLogo>
 					<Typography variant="h4" component="p">
 						Registration
 					</Typography>
@@ -186,7 +175,7 @@ class SignUp extends Component {
 							error={this.state.nameError === "" ? false : true}
 							helperText={this.state.nameError}
 							InputLabelProps={{
-								style: { color: "#fff" },
+								style: { color: "#808080" },
 							}}
 							inputProps={{ style: { color: "white" } }}
 						/>
@@ -200,7 +189,7 @@ class SignUp extends Component {
 							error={this.state.emailError === "" ? false : true}
 							helperText={this.state.emailError}
 							InputLabelProps={{
-								style: { color: "#fff" },
+								style: { color: "#808080" },
 							}}
 							inputProps={{ style: { color: "white" } }}
 						/>
@@ -214,7 +203,7 @@ class SignUp extends Component {
 							error={this.state.pwLengthError === "" ? false : true}
 							helperText={this.state.pwLengthError}
 							InputLabelProps={{
-								style: { color: "#fff" },
+								style: { color: "#808080" },
 							}}
 							inputProps={{ style: { color: "white" } }}
 						/>
@@ -228,7 +217,7 @@ class SignUp extends Component {
 							error={this.state.pwCheckError === "" ? false : true}
 							helperText={this.state.pwCheckError}
 							InputLabelProps={{
-								style: { color: "#fff" },
+								style: { color: "#808080" },
 							}}
 							inputProps={{ style: { color: "white" } }}
 						/>
@@ -242,11 +231,12 @@ class SignUp extends Component {
 								borderRadius: 5,
 								backgroundColor: "#FFFFFF",
 								fontSize: "15px",
+								// boxShadow: "0 3px 5px 2px rgba(30, 30, 30)",
 							}}
 							disabled={!this.state.password2}
 							onClick={() => this.joinHandler()}
 						>
-							가입
+							<b style={{ fontWeight: "bold" }}>join</b>
 						</Button>
 					</Wrap2>
 				</Wrap1>
@@ -254,24 +244,36 @@ class SignUp extends Component {
 		);
 	}
 }
-
 const Background = styled.div`
 	display: grid;
 	place-items: center;
 	height: 100vh;
 	width: 100%;
 `;
-
 const Wrap1 = styled.div`
 	width: clamp(23ch, 60%, 23ch);
 	height: 70vh;
 	display: flex;
+	margin-top: 30px;
 	flex-direction: column;
 `;
-
 const Wrap2 = styled.div`
 	height: 125px;
 	width: 100%;
 `;
+const SLogo = styled.div`
+	position: relative;
+	overflow: hidden;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	/* border: 5px solid red; */
+	margin-bottom: 70px;
+	margin-top: 100px;
+	size: 10px;
+`;
 
+const Anchor = styled(Link)`
+	text-decoration: none;
+`;
 export default withRouter(SignUp);
