@@ -14,8 +14,27 @@ COTATS는 Time과 Codestates에서 글자를 조합해 만들어졌습니다.
 2. 우측에 햄버거 메뉴를 통해 나타나는 공부시간랭킹을 통해, 다른 사람이
    어느정도로 공부하는지 알 수 있습니다.
 
+# Getting Started
+Using npm
+1. 이 repository를 **다운로드** or **Git Clone** 받으십시오.
+2. 상위디렉토리/server/client 폴더에서 각각 npm install을 하십시오.
+```js
+$ npm install
+```
+3. client를 실행하십시오.
+```js
+$ npm run start
+```
+url: http://cotats-client.s3-website.ap-northeast-2.amazonaws.com
+
 # Wireframe
+<details>
+<summary>Wireframe</summary>
+<div markdown="1">
 <img width="988" alt="KakaoTalk_Photo_2020-08-12-11-24-07" src="https://user-images.githubusercontent.com/59818904/89968296-75520e00-dc8e-11ea-8b90-59a5632c9f2f.png">
+</div>
+</details>
+
 
 
 # Functional List
@@ -29,8 +48,29 @@ COTATS는 Time과 Codestates에서 글자를 조합해 만들어졌습니다.
 
 
 # Flow chart
+<details>
+<summary>Wireframe</summary>
+<div markdown="1">
+   
+- 시작
 ![My First Board (1)](https://user-images.githubusercontent.com/59818904/89965989-1a69e800-dc89-11ea-92ee-d5b907afdab0.jpg)
+   
+- 최종
+![My First Board (4)](https://user-images.githubusercontent.com/59829298/90850703-66194180-e3ad-11ea-9262-a00e7933824d.jpg)
+</div>
+</details>
 
+
+# Features
+- 로그인
+- 로그아웃
+- 회원가입
+- 타이머 기능
+- 타이머 일시정지
+- 타이머 중지(시간기록, 저장)
+- 오늘의 랭킹
+- 주간 랭킹조회
+- 월간 랭킹조회
 
 # API docs
 - https://app.gitbook.com/@cotats/s/cotats/user/signin.js
@@ -38,15 +78,27 @@ COTATS는 Time과 Codestates에서 글자를 조합해 만들어졌습니다.
 # Schema
 ![스키마](https://user-images.githubusercontent.com/59818904/89965880-cd861180-dc88-11ea-9e68-5e7adf04cf83.png)
 
-
 # Dependencies
-- react
-- express
-- 추후 추가 예정
-
+- React
+- React-Router
+- React-Hooks
+- styled-components
+- material-ui
 
 # Made by
  ## Donghun, Kim / frontend / leader
+ - GMail: kisses217@gmail.com
+ - GitHub Id: @rlaehdgns217
+ 
  ## Bokyung, Kwon / frontend / member
+ - GMail: adelabbok@gmail.com
+ - GitHub Id: @bbodela
+ 
  ## Doyeon, Kim / backend / member
+ - GMail: gothone7092@gmail.com 
+ - GitHub Id: @doyeonkim7092
+ 
  ## Jongwan, Kim / backend / member
+ - GMail: kjw900901@gmail.com
+ - GitHub Id: @kimjongwan2
+ 
