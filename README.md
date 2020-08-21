@@ -1,6 +1,6 @@
 # COTATS
 
-![cotats_b](https://user-images.githubusercontent.com/59829298/90852410-5ea86700-e3b2-11ea-8999-f37f52f4dfe0.png)
+![Group 3](https://user-images.githubusercontent.com/59829298/90852730-41c06380-e3b3-11ea-953e-e9e6543fba10.png)
 
 공부 집중을 도와주는 웹페이지, COTATS입니다.
 
