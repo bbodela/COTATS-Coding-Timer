@@ -1,21 +1,21 @@
-# COTATS
-
 ![Group 3](https://user-images.githubusercontent.com/59829298/90852730-41c06380-e3b3-11ea-953e-e9e6543fba10.png)
+
+# COTATS
 
 공부 집중을 도와주는 웹페이지, COTATS입니다.
 
-COTATS는 Time과 Codestates에서 글자를 조합해 만들어졌습니다.
+COTATS는 Time과 Codestates 두 단어를 조합하여 만들.
 
-코드스테이츠 과정을 진행하면서, 내가 어느 정도 공부해야되는지 대략적으로라도 알 수 있게 도와줍니다.
+코드스테이츠 과정을 진행하면서, 내가 어느 정도 공부했고
+또 다른 수강생들은 얼마나 공부하는 지 대략적으로 알 수 있게 도와줍니다.
 
 1. 집중해서 공부를 시작할 때 start를 누르고, 잠시 쉴 때는 pause 버튼을 누름으로써 
    실제 자신이 집중한 시간을 알 수 있습니다.
 
-2. 우측에 햄버거 메뉴를 통해 나타나는 공부시간랭킹을 통해, 다른 사람이
-   어느정도로 공부하는지 알 수 있습니다.
+2. 우측에 햄버거 메뉴를 통해 나타나는 사용자들의 공부시간과 랭킹을 통해, 다른 사람의 공부량을 알 수 있습니다.
 
 # Getting Started
-Using npm
+**Using npm**
 1. 이 repository를 **다운로드** or **Git Clone** 받으십시오.
 2. 상위디렉토리/server/client 폴더에서 각각 npm install을 하십시오.
 ```js
@@ -27,6 +27,23 @@ $ npm run start
 ```
 url: http://cotats-client.s3-website.ap-northeast-2.amazonaws.com
 
+
+# Functional List
+1. SignIn/ SignOut/ SignUp
+- 로그인
+- 로그아웃
+- 회원가입
+
+2. Timer
+- start 버튼: 메인 페이지의 스톱워치 작동 시작
+- stop 버튼: 메인 페이지의 스톱워치 종료 및 저장
+- pause 버튼: 메인 페이지의 스톱워치 일시정지
+
+3. Hamburger Menu
+- 본인과 모든 사용자의 실시간 랭킹을 확인
+- 주간 누적 공부시간과 랭킹 확인
+- 월간 누적 공부시간과 랭킹 확인
+
 # Wireframe
 <details>
 <summary>Wireframe</summary>
@@ -34,17 +51,6 @@ url: http://cotats-client.s3-website.ap-northeast-2.amazonaws.com
 <img width="988" alt="KakaoTalk_Photo_2020-08-12-11-24-07" src="https://user-images.githubusercontent.com/59818904/89968296-75520e00-dc8e-11ea-8b90-59a5632c9f2f.png">
 </div>
 </details>
-
-
-
-# Functional List
-- login 버튼을 통해 접속할 수 있습니다
-- signup 버튼을 통해 서비스를 이용할 수 있습니다
-- 우측 상단 햄버거 메뉴를 통해 본인의 실시간 랭킹을 확인할 수 있습니다
-- 우측 상단 햄버거 메뉴를 통해 다른 유저들의 누적 공부시간 랭킹을 확인할 수 있습니다
-- start 버튼을 통해 메인 페이지의 스톱워치를 사용할 수 있습니다
-- stop 버튼을 통해 메인 페이지의 스톱워치를 종료할 수 있습니다
-- pause 버튼을 통해 메인 페이지의 스톱워치를 일시정지 할 수 있습니다
 
 
 # Flow chart
