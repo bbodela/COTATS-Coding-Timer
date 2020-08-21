@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-
+import React from "react";
 import MenuIcon from "@material-ui/icons/Menu";
-import RefreshRoundedIcon from "@material-ui/icons/RefreshRounded";
 import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
 import PersonIcon from "@material-ui/icons/Person";
 import {
@@ -10,11 +8,7 @@ import {
 	ListItem,
 	ListItemText,
 	Dialog,
-	DialogActions,
-	DialogContent,
 	DialogTitle,
-	TextField,
-	makeStyles,
 } from "@material-ui/core";
 import axios from "axios";
 import ReactDOM from "react-dom";
@@ -27,15 +21,11 @@ function Hamburger(props) {
 				params: { test: "gettest" },
 			})
 			.then((res) => {
-				console.log("refresh res test", res.data);
-				// let myData;
 				let data = res.data;
 				console.log(
 					JSON.parse(window.sessionStorage.user).id,
 					"window.sessionStorage"
 				);
-				//res로 받아오는 데이터의 인덱스를 받아오고 싶은데, -
-				//그 res.data[i]가 세션스토리지의 id와 동일한 i 를 출력 한다..
 				const findMyRanking = function (data) {
 					for (let i = 0; i < data.length; i++) {
 						if (JSON.parse(window.sessionStorage.user).id === data[i].user_id) {
@@ -70,13 +60,17 @@ function Hamburger(props) {
 				);
 				ReactDOM.render(
 					<div>
-						<List>
-							<div>
+						<UsersContainer style={{ background: "#f2f2f2" }}>
+							<User>
 								<PersonIcon />
-								<ListItemText>{myRanking}</ListItemText>
-							</div>
+								<ListItemText>
+									<Rank>{myRanking}</Rank>
+								</ListItemText>
+							</User>
 							<div>
-								<ListItemText>{myData[0].user.username}</ListItemText>
+								<ListItemText>
+									<b>{myData[0].user.username}</b>
+								</ListItemText>
 								<ListItemText>
 									<span>{hourData >= 10 ? hourData : "0" + hourData}</span>
 									&nbsp;:&nbsp;
@@ -85,8 +79,7 @@ function Hamburger(props) {
 									<span>{secData >= 10 ? secData : "0" + secData}</span>
 								</ListItemText>
 							</div>
-							{/* <div className="ranking">{myData[0].ranking}</div> */}
-						</List>
+						</UsersContainer>
 
 						<div>
 							{data
@@ -109,13 +102,16 @@ function Hamburger(props) {
 												60
 									);
 									return (
-										<List key={index}>
-											<div>
+										<UsersContainer key={index}>
+											<user>
 												<PersonIcon />
-												<ListItemText>{index + 1}</ListItemText>
-											</div>
+												<ListItemText>{index + 1}</ListItemText> <BorderLine />
+											</user>
+
 											<div>
-												<ListItemText>{student.user.username}</ListItemText>
+												<ListItemText>
+													<b>{student.user.username}</b>
+												</ListItemText>
 												<ListItemText>
 													<span>
 														{s_hourData >= 10 ? s_hourData : "0" + s_hourData}
@@ -128,9 +124,10 @@ function Hamburger(props) {
 													<span>
 														{s_secData >= 10 ? s_secData : "0" + s_secData}
 													</span>
-												</ListItemText>
+												</ListItemText>{" "}
+												<BorderLine />
 											</div>
-										</List>
+										</UsersContainer>
 									);
 								})}
 						</div>
@@ -149,13 +146,7 @@ function Hamburger(props) {
 				params: { test: "gettest" },
 			})
 			.then((res) => {
-				console.log("refresh res test", res.data);
-				// let myData;
 				let data = res.data;
-				console.log(
-					JSON.parse(window.sessionStorage.user).id,
-					"window.sessionStorage"
-				);
 
 				const findMyRanking = function (data) {
 					for (let i = 0; i < data.length; i++) {
@@ -192,13 +183,17 @@ function Hamburger(props) {
 				);
 				ReactDOM.render(
 					<div>
-						<List>
-							<div>
+						<UsersContainer style={{ background: "#f2f2f2" }}>
+							<User>
 								<PersonIcon />
-								<ListItemText>{myRanking}</ListItemText>
-							</div>
+								<ListItemText>
+									<Rank>{myRanking}</Rank>
+								</ListItemText>
+							</User>
 							<div>
-								<ListItemText>{myData[0].user.username}</ListItemText>
+								<ListItemText>
+									<b>{myData[0].user.username}</b>
+								</ListItemText>
 								<ListItemText>
 									<span>{hourData >= 10 ? hourData : "0" + hourData}</span>
 									&nbsp;:&nbsp;
@@ -207,8 +202,7 @@ function Hamburger(props) {
 									<span>{secData >= 10 ? secData : "0" + secData}</span>
 								</ListItemText>
 							</div>
-							{/* <div className="ranking">{myData[0].ranking}</div> */}
-						</List>
+						</UsersContainer>
 
 						<div>
 							{data
@@ -231,13 +225,15 @@ function Hamburger(props) {
 												60
 									);
 									return (
-										<List key={index}>
-											<div>
+										<UsersContainer key={index}>
+											<User>
 												<PersonIcon />
-												<ListItemText>{index + 1}</ListItemText>
-											</div>
+												<ListItemText>{index + 1}</ListItemText> <BorderLine />
+											</User>
 											<div>
-												<ListItemText>{student.user.username}</ListItemText>
+												<ListItemText>
+													<b>{student.user.username}</b>
+												</ListItemText>
 												<ListItemText>
 													<span>
 														{s_hourData >= 10 ? s_hourData : "0" + s_hourData}
@@ -250,9 +246,10 @@ function Hamburger(props) {
 													<span>
 														{s_secData >= 10 ? s_secData : "0" + s_secData}
 													</span>
-												</ListItemText>
+												</ListItemText>{" "}
+												<BorderLine />
 											</div>
-										</List>
+										</UsersContainer>
 									);
 								})}
 						</div>
@@ -271,14 +268,7 @@ function Hamburger(props) {
 				params: { test: "gettest" },
 			})
 			.then((res) => {
-				console.log("refresh res test", res.data);
-				// let myData;
 				let data = res.data;
-				console.log(
-					JSON.parse(window.sessionStorage.user).id,
-					"window.sessionStorage"
-				);
-
 				const findMyRanking = function (data) {
 					for (let i = 0; i < data.length; i++) {
 						if (JSON.parse(window.sessionStorage.user).id === data[i].user_id) {
@@ -314,14 +304,17 @@ function Hamburger(props) {
 				);
 				ReactDOM.render(
 					<div>
-						<div>{`${new Date().getMonth() + 1}/${new Date().getDate()}`}</div>
-						<List>
-							<div>
+						<UsersContainer style={{ background: "#f2f2f2" }}>
+							<User>
 								<PersonIcon />
-								<ListItemText>{myRanking}</ListItemText>
-							</div>
+								<ListItemText>
+									<Rank>{myRanking}</Rank>
+								</ListItemText>
+							</User>
 							<div>
-								<ListItemText>{myData[0].user.username}</ListItemText>
+								<ListItemText>
+									<b>{myData[0].user.username}</b>
+								</ListItemText>
 								<ListItemText>
 									<span>{hourData >= 10 ? hourData : "0" + hourData}</span>
 									&nbsp;:&nbsp;
@@ -330,8 +323,7 @@ function Hamburger(props) {
 									<span>{secData >= 10 ? secData : "0" + secData}</span>
 								</ListItemText>
 							</div>
-							{/* <div className="ranking">{myData[0].ranking}</div> */}
-						</List>
+						</UsersContainer>
 
 						<div>
 							{data
@@ -354,13 +346,17 @@ function Hamburger(props) {
 												60
 									);
 									return (
-										<List key={index}>
-											<div>
+										<UsersContainer key={index}>
+											<User>
 												<PersonIcon />
 												<ListItemText>{index + 1}</ListItemText>
-											</div>
+												<BorderLine />
+											</User>
+
 											<div>
-												<ListItemText>{student.user.username}</ListItemText>
+												<ListItemText>
+													<b>{student.user.username}</b>
+												</ListItemText>
 												<ListItemText>
 													<span>
 														{s_hourData >= 10 ? s_hourData : "0" + s_hourData}
@@ -374,8 +370,9 @@ function Hamburger(props) {
 														{s_secData >= 10 ? s_secData : "0" + s_secData}
 													</span>
 												</ListItemText>
+												<BorderLine />
 											</div>
-										</List>
+										</UsersContainer>
 									);
 								})}
 						</div>
@@ -394,9 +391,15 @@ function Hamburger(props) {
 				<div>
 					<div className="hamburgerMenuSide">
 						<Dialog
+							fullWidth={true}
+							maxWidth={"xs"}
 							open={props.open}
-							aria-labelledby="dialog-title"
+							aria-labelledby="confirmation-dialog-title"
 							refresh={refresh}
+							style={{
+								textAlign: "center",
+								alignContent: "center",
+							}}
 						>
 							<CloseRoundedIcon
 								fontSize="large"
@@ -405,44 +408,42 @@ function Hamburger(props) {
 									color: "black",
 									cursor: "pointer",
 								}}
-							/>{" "}
-							<DialogTitle id="dialog-title">
-								<h2>{`${
+							/>
+							<DialogTitle id="dconfirmation-dialog-title">
+								<span style={{ fontSize: 24, color: "black" }}>{`${
 									new Date().getMonth() + 1
-								}/${new Date().getDate()}`}</h2>
+								}월 ${new Date().getDate()}일`}</span>
 							</DialogTitle>
-							<List>
-								<ListItem>
-									<Button
-										style={{
-											color: "black",
-										}}
-										onClick={refresh}
-									>
-										TODAY
-									</Button>
+							<List style={{ display: "flex" }}>
+								<ListItem
+									autoFocus
+									button
+									onClick={refresh}
+									style={{
+										color: "black",
+									}}
+								>
+									TODAY
 								</ListItem>
-								<ListItem>
-									<Button
-										style={{
-											color: "black",
-										}}
-										className="weekly"
-										onClick={weeklyRefresh}
-									>
-										weekly
-									</Button>
+								<ListItem
+									autoFocus
+									button
+									onClick={weeklyRefresh}
+									style={{
+										color: "black",
+									}}
+								>
+									WEEKLY
 								</ListItem>
-								<ListItem>
-									<Button
-										style={{
-											color: "black",
-										}}
-										className="monthly"
-										onClick={monthlyRefresh}
-									>
-										monthly
-									</Button>
+								<ListItem
+									autoFocus
+									button
+									onClick={monthlyRefresh}
+									style={{
+										color: "black",
+									}}
+								>
+									MONTHLY
 								</ListItem>
 							</List>
 							<div id="rankingtable"></div>
@@ -476,8 +477,22 @@ const SList = styled.div`
 	right: 30px;
 `;
 
-const RecordList = styled.ul`
-	list-style: none;
+const UsersContainer = styled.div`
+	background: "#f2f2f2";
+	display: grid;
+	grid-template-columns: 30% 70%;
+`;
+
+const User = styled.div`
+	grid-column: 1/2;
+`;
+
+const Rank = styled.span`
+	font-size: 20px;
+`;
+
+const BorderLine = styled.div`
+	border-bottom: 1px solid #f2f2f2;
 `;
 
 export default Hamburger;

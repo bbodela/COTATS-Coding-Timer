@@ -25,14 +25,12 @@ class App extends Component {
 			isLogin: true,
 		});
 	};
-
 	logoutChangeHandler = () => {
+		window.sessionStorage.clear();
 		const { isLogin } = this.state;
 		this.setState({
 			isLogin: false,
 		});
-
-		window.sessionStorage.clear();
 	};
 
 	componentDidMount = () => {
@@ -100,7 +98,7 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const Container = styled.div`
-	background: linear-gradient(to right, #000000, #434343);
+	background: linear-gradient(to right, #000000, #333333);
 	color: white;
 	& * {
 		box-sizing: border-box;

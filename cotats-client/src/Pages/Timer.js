@@ -1,15 +1,11 @@
-// signOut 기능을 할 수 있는 버튼을 여기에
 import React, { useState } from "react";
-import ReactDOM from "react-dom";
-import axios from "axios";
 import DisplayTimer from "Components/DisplayTimer";
 import Btn from "Components/Btn";
-import Hamburger from "Components/Hamburger";
 import { Redirect } from "react-router-dom";
 import styled from "styled-components";
+import axios from "axios";
 
 function Timer(props) {
-	// console.log("타이머props", props);
 	//state 변수 및 세팅
 	const [status, setStatus] = useState(0);
 	const [time, setTime] = useState({ ms: 0, s: 0, m: 0, h: 0 });
@@ -69,14 +65,8 @@ function Timer(props) {
 	};
 
 	const postTime = (props) => {
-		let today = `${new Date().getFullYear()}/${
-			new Date().getMonth() + 1
-		}/${new Date().getDate()}`;
-		// console.log(`${time.h}:${time.m}:${time.s}`, today);
-		console.log(time.h * 3600 + time.m * 60 + time.s, "초단위 테스트");
 		axios
 			.post("http://52.79.251.147:5000/time/timepause", {
-				// savetime: `${time.h}:${time.m}:${time.s}`,
 				savetime: time.h * 3600 + time.m * 60 + time.s,
 				user_id: JSON.parse(window.sessionStorage.user).id,
 			})
