@@ -1,4 +1,4 @@
-# COTATS
+# COTATS-Client
 
 ![image (1)](https://user-images.githubusercontent.com/59818904/89968304-78e59500-dc8e-11ea-899a-3f554ffba16d.png)
 
