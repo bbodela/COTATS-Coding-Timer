@@ -4,7 +4,7 @@
 
 공부 집중을 도와주는 웹페이지, COTATS입니다.
 
-COTATS는 Time과 Codestates 두 단어를 조합하여 만들.
+COTATS는 Time과 Codestates 두 단어를 조합하여 만들었습니다.
 
 코드스테이츠 과정을 진행하면서, 내가 어느 정도 공부했고
 또 다른 수강생들은 얼마나 공부하는 지 대략적으로 알 수 있게 도와줍니다.
@@ -48,7 +48,8 @@ url: http://cotats-client.s3-website.ap-northeast-2.amazonaws.com
 <details>
 <summary>Wireframe</summary>
 <div markdown="1">
-<img width="988" alt="KakaoTalk_Photo_2020-08-12-11-24-07" src="https://user-images.githubusercontent.com/59818904/89968296-75520e00-dc8e-11ea-8b90-59a5632c9f2f.png">
+   
+![스크린샷, 2020-10-14 17-32-18](https://user-images.githubusercontent.com/59829298/95964183-7dbbf600-0e43-11eb-816e-47e436f57cb7.png)
 </div>
 </details>
 
