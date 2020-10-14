@@ -15,7 +15,7 @@ COTATS는 Time과 Codestates에서 글자를 조합해 만들어졌습니다.
    어느정도로 공부하는지 알 수 있습니다.
 
 # Wireframe
-<img width="988" alt="KakaoTalk_Photo_2020-08-12-11-24-07" src="https://user-images.githubusercontent.com/59818904/89968296-75520e00-dc8e-11ea-8b90-59a5632c9f2f.png">
+![스크린샷, 2020-10-14 17-32-18](https://user-images.githubusercontent.com/59829298/95964183-7dbbf600-0e43-11eb-816e-47e436f57cb7.png)
 
 
 # Functional List
