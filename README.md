@@ -80,7 +80,7 @@ url: http://cotats-client.s3-website.ap-northeast-2.amazonaws.com
 - 월간 랭킹조회
 
 # API docs
-- https://app.gitbook.com/@cotats/s/cotats/user/signin.js
+- https://adelabbok.gitbook.io/cotats-timer/
 
 # Schema
 ![스키마](https://user-images.githubusercontent.com/59818904/89965880-cd861180-dc88-11ea-9e68-5e7adf04cf83.png)
