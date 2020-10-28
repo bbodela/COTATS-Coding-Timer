@@ -10,7 +10,7 @@ function Header(props) {
   const [menuStatus, setMenuStatus] = useState(false); //menustatus = false
   const logoutHandler = () => {
     axios
-      .post("http://52.79.251.147:5000/user/signout")
+      .post("http://52.79.241.6:5000/user/signout")
       .then((res) => {
         console.log("헤더signout버튼클릭 시 res", res);
         props.logoutChangeHandler();
