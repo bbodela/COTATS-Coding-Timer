@@ -7,14 +7,6 @@ import logo from "../img/cotats_w_inner.png";
 
 axios.defaults.withCredentials = false;
 
-/* 유효성 검사
-		username: 최소 2글자 이상
-		email: email형식에 부합하도록
-		pw: 비밀번호는 6자 이상
-		무조건 입력을해야 버튼이 눌러지도록>> 입력값이없으면 일치하는 유저가없어서 어차피 서버응답이 에러
-			// 입력 폼 입력안되면 버튼눌려지지 않는 에러 추가
-	*/
-
 class SignUp extends Component {
   constructor(props) {
     super(props);
@@ -157,7 +149,7 @@ class SignUp extends Component {
   joinHandler = () => {
     const { email, password, username } = this.state;
     axios
-      .post("http://52.79.251.147:5000/user/signup", {
+      .post("http://52.79.241.6:5000/user/signup", {
         username: username,
         email: email,
         password: password,
