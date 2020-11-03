@@ -149,7 +149,7 @@ class SignUp extends Component {
   joinHandler = () => {
     const { email, password, username } = this.state;
     axios
-      .post("http://52.79.241.6:5000/user/signup", {
+      .post("http://3.34.126.28:5000/user/signup", {
         username: username,
         email: email,
         password: password,

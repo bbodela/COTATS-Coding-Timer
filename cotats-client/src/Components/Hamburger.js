@@ -23,7 +23,7 @@ import styled from "styled-components";
 function Hamburger(props) {
   const refresh = () => {
     axios
-      .get("http://52.79.241.6:5000/time/timerank", {
+      .get("http://3.34.126.28:5000/time/timerank", {
         params: { test: "gettest" },
       })
       .then((res) => {
@@ -145,7 +145,7 @@ function Hamburger(props) {
 
   const weeklyRefresh = () => {
     axios
-      .get("http://52.79.241.6:5000/time/timeweekrank", {
+      .get("http://3.34.126.28:5000/time/timeweekrank", {
         params: { test: "gettest" },
       })
       .then((res) => {
@@ -267,7 +267,7 @@ function Hamburger(props) {
 
   const monthlyRefresh = () => {
     axios
-      .get("http://52.79.241.6:5000/time/timemonthrank", {
+      .get("http://3.34.126.28:5000/time/timemonthrank", {
         params: { test: "gettest" },
       })
       .then((res) => {

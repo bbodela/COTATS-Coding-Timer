@@ -39,7 +39,7 @@ function Timer(props) {
   };
   const start = () => {
     axios
-      .post("http://52.79.241.6:5000/time/timestart", {
+      .post("http://3.34.126.28:5000/time/timestart", {
         user_id: JSON.parse(window.sessionStorage.user).id,
       })
       .then((res) => {
@@ -70,7 +70,7 @@ function Timer(props) {
     // console.log(`${time.h}:${time.m}:${time.s}`, today);
     console.log(time.h * 3600 + time.m * 60 + time.s, "초단위 테스트");
     axios
-      .post("http://52.79.241.6:5000/time/timepause", {
+      .post("http://3.34.126.28:5000/time/timepause", {
         // savetime: `${time.h}:${time.m}:${time.s}`,
         savetime: time.h * 3600 + time.m * 60 + time.s,
         user_id: JSON.parse(window.sessionStorage.user).id,
@@ -84,7 +84,7 @@ function Timer(props) {
   };
   return (
     <div className="Timer">
-      {props.isLogin === true ? (
+      {/* {props.isLogin === true ? ( */}
         <Background>
           <DisplayTimer time={time} />
           <Btn
@@ -95,17 +95,18 @@ function Timer(props) {
             posttime={postTime}
           />
         </Background>
-      ) : (
+      {/* ) : (
         <Redirect from="*" to="/" />
-      )}
+      )} */}
     </div>
   );
 }
 
 const Background = styled.div`
-  display: grid;
+  display: flex;
+  flex-direction: column;
   place-items: center;
-  height: 100vh;
+  height: 100%;
 `;
 
 export default Timer;

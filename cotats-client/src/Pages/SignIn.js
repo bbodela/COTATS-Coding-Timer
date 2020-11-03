@@ -66,7 +66,7 @@ class SignIn extends Component {
     const { email, password } = this.state;
     const { loginChangeHandler } = this.props;
     axios
-      .post("http://52.79.241.6:5000/user/signin", {
+      .post("http://3.34.126.28:5000/user/signin", {
         email: email,
         password: password,
       })

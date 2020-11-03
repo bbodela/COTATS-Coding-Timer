@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { BrowserRouter, Route, Redirect } from "react-router-dom";
 import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
-import axios from "axios";
 import theme from "../theme";
 
 import Home from "Pages/Home";
@@ -9,16 +8,11 @@ import SignIn from "Pages/SignIn";
 import SignUp from "Pages/SignUp";
 import Timer from "Pages/Timer";
 import Header from "Components/Header";
-import Footer from "Components/Footer";
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
+    state = {
       isLogin: false,
     };
-  }
 
   // handle login state
   loginChangeHandler = () => {
