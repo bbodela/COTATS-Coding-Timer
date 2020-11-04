@@ -1,7 +1,7 @@
-import React, { Component, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Route, Redirect } from "react-router-dom";
 import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
-import theme from "../theme";
+// import theme from "../theme";
 
 import Home from "Pages/Home";
 import SignIn from "Pages/SignIn";
@@ -9,91 +9,45 @@ import SignUp from "Pages/SignUp";
 import Timer from "Pages/Timer";
 import Header from "Components/Header";
 
-class App extends Component {
-    state = {
-      isLogin: false,
-    };
+const App = () => {
+	const [status, setStatus] = useState(false);
 
-  // handle login state
-  loginChangeHandler = () => {
-    const { isLogin } = this.state;
-    this.setState({
-      isLogin: true,
-    });
-  };
-  logoutChangeHandler = () => {
-    window.sessionStorage.clear();
-    const { isLogin } = this.state;
-    this.setState({
-      isLogin: false,
-    });
-  };
+	const login = () => {
+		setStatus(true);
+	};
 
-  componentDidMount = () => {
-    if (window.sessionStorage.user) {
-      this.loginChangeHandler();
-    } else {
-      this.logoutChangeHandler();
-    }
-  };
+	const logout = () => {
+		window.sessionStorage.clear();
+		setStatus(false);
+	};
 
-  render() {
-    const { isLogin } = this.state;
-    return (
-      <Fragment>
-        <ThemeProvider theme={theme}>
-          <GlobalStyle />
-          <Container>
-            <BrowserRouter>
-              <Header
-                isLogin={isLogin}
-                loginChangeHandler={() => this.loginChangeHandler()}
-                logoutChangeHandler={() => this.logoutChangeHandler()}
-              />
-              <Route
-                exact
-                path="/"
-                render={() => {
-                  return (
-                    <Route path="/">
-                      <Home isLogin={isLogin} />
-                    </Route>
-                  );
-                }}
-              />
-              <Route
-                path="/signin"
-                render={() => (
-                  <SignIn
-                    isLogin={isLogin}
-                    loginChangeHandler={() => this.loginChangeHandler()}
-                    logoutChangeHandler={() => this.logoutChangeHandler()}
-                    // handleLogoutChange={() => this.handleLogoutChange()}
-                  />
-                )}
-              />
-              <Route
-                path="/signup"
-                render={() => <SignUp isLogin={isLogin} />}
-              />
-              <Route
-                path="/timer"
-                render={() => (
-                  <Timer
-                    isLogin={isLogin}
-                    // loginChangeHandler={() => this.loginChangeHandler()}
-                  />
-                )}
-              />
-              <Redirect from="*" to="/timer" />
-              {/* 수정할것~!~!~!~위에꺼 */}
-            </BrowserRouter>
-          </Container>
-        </ThemeProvider>
-      </Fragment>
-    );
-  }
-}
+	useEffect(() => {
+		if (window.sessionStorage.user) {
+			login();
+		} else {
+			logout();
+		}
+	});
+
+	return (
+		<>
+			<GlobalStyle />
+			<Container className="App__container">
+				<BrowserRouter>
+					<Header isLogin={status} setLogin={login} setLogout={logout} />
+					<Route exact path="/" render={() => <Home isLogin={status} />} />
+					<Route
+						path="/signin"
+						render={() => <SignIn isLogin={status} setLogin={login} />}
+					/>
+					<Route path="/signup" render={() => <SignUp isLogin={status} />} />
+					<Route path="/timer" render={() => <Timer isLogin={status} />} />
+					<Redirect from="*" to="/timer" />
+				</BrowserRouter>
+			</Container>
+		</>
+	);
+};
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -105,12 +59,12 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const Container = styled.div`
-  background: linear-gradient(to right, #000000, #434343);
-  color: white;
-  & * {
-    box-sizing: border-box;
-    font-family: "Source Sans Pro";
-  }
+	background-color: #212121;
+	color: white;
+	& * {
+		box-sizing: border-box;
+		font-family: "Source Sans Pro";
+	}
 `;
 
 export default App;
