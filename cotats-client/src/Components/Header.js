@@ -40,6 +40,7 @@ const Header = props => {
 							<Stext>JOIN</Stext>
 						</Anchor>
 					</MenuBtn>
+					<button onClick={props.themeController}>Toggle Theme</button>
 				</HeaderContainer>
 			) : (
 				<HeaderContainer>
@@ -61,6 +62,7 @@ const Header = props => {
 							test
 						</Hamburger>
 					</MenuBtn>
+					<button onClick={props.themeController}>Toggle Theme</button>
 				</HeaderContainer>
 			)}
 		</>
