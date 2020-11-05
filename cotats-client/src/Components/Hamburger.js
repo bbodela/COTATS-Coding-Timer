@@ -20,23 +20,15 @@ import axios from "axios";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 
-function Hamburger(props) {
+const Hamburger = props => {
 	const refresh = () => {
 		axios
 			.get("http://3.34.48.151:5000/time/timerank", {
 				params: { test: "gettest" },
 			})
 			.then(res => {
-				console.log("refresh res test", res.data);
-				// let myData;
 				let data = res.data;
-				console.log(
-					JSON.parse(window.sessionStorage.user).id,
-					"window.sessionStorage"
-				);
-				//res로 받아오는 데이터의 인덱스를 받아오고 싶은데, -
-				//그 res.data[i]가 세션스토리지의 id와 동일한 i 를 출력 한다..
-				const findMyRanking = function (data) {
+				const findMyRanking = data => {
 					for (let i = 0; i < data.length; i++) {
 						if (JSON.parse(window.sessionStorage.user).id === data[i].user_id) {
 							return i + 1;
@@ -45,8 +37,7 @@ function Hamburger(props) {
 				};
 				let myRanking = findMyRanking(data);
 				let myData = data.filter(
-					(mydata, index) =>
-						mydata.user_id === JSON.parse(window.sessionStorage.user).id
+					mydata => mydata.user_id === JSON.parse(window.sessionStorage.user).id
 				);
 				if (myData.length === 0) {
 					myData = [
@@ -467,7 +458,7 @@ function Hamburger(props) {
 			)}
 		</SList>
 	);
-}
+};
 
 const SList = styled.div`
 	position: absolute;

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Redirect, useHistory } from "react-router-dom";
+import { Typography, TextField, Button } from "@material-ui/core";
 import axios from "axios";
-import { Typography, TextField, Button, Card } from "@material-ui/core";
 import logo from "../img/cotats_w_inner.png";
 
 axios.defaults.withCredentials = false;
@@ -37,10 +37,42 @@ const usePassword = (inputValue, validator) => {
 	return { password, onChange };
 };
 
-const SignIn = props => {
+const useName = (inputValue, validator) => {
+	const [name, setName] = useState(inputValue);
+	const onChange = e => {
+		const {
+			target: { value },
+		} = e;
+
+		if (typeof validator === "function") {
+			setName(value);
+			validator(value);
+		}
+	};
+	return { name, onChange };
+};
+
+const useCheckPW = (inputValue, validator) => {
+	const [checkPW, setCheckPW] = useState(inputValue);
+	const onChange = e => {
+		const {
+			target: { value },
+		} = e;
+
+		if (typeof validator === "function") {
+			setCheckPW(value);
+			validator(value);
+		}
+	};
+	return { checkPW, onChange };
+};
+
+const SignUp = props => {
+	let history = useHistory();
 	const [emailError, setEmailError] = useState("");
 	const [pwError, setPWError] = useState("");
-	let history = useHistory();
+	const [nameError, setNameError] = useState("");
+	const [checkError, setCheckError] = useState("");
 
 	const validateEmail = str => {
 		let isError = false;
@@ -58,6 +90,7 @@ const SignIn = props => {
 			setEmailError("");
 		}
 	};
+	const inputMail = useMail("", validateEmail);
 
 	const validatePW = pw => {
 		let isError = false;
@@ -75,36 +108,64 @@ const SignIn = props => {
 			setPWError("");
 		}
 	};
-
-	const inputMail = useMail("", validateEmail);
 	const inputPassword = usePassword("", validatePW);
 
-	const loginHandler = () => {
-		const { email } = inputMail;
-		const { password } = inputPassword;
-		const { setLogin } = props;
-		console.log(email, password);
+	const validateName = name => {
+		let isError = false;
+		let errorText = {};
+		if (name.length < 2) {
+			isError = true;
+			errorText.nameError = "이름은 최소 2자 이상이어야 합니다";
+		}
+		if (isError) {
+			setNameError(errorText.nameError);
+		}
+		if (!isError) {
+			setNameError("");
+		}
+	};
+	const inputName = useName("", validateName);
+
+	const validateCheckPW = pw => {
+		let isError = false;
+		let errorText = {};
+
+		if (password !== pw) {
+			isError = true;
+			errorText.pwCheckError = "비밀번호가 일치하지 않습니다";
+		}
+		if (isError) {
+			setCheckError(errorText.pwCheckError);
+		}
+		if (!isError) {
+			setCheckError("");
+		}
+	};
+	const inputCheckPW = useCheckPW("", validateCheckPW);
+
+	const { name } = inputName;
+	const { email } = inputMail;
+	const { password } = inputPassword;
+
+	const joinHandler = () => {
+		console.log("입력값들>>>", name, email, password);
+
 		axios
-			.post("http://3.34.48.151:5000/user/signin", {
+			.post("http://3.34.48.151:5000/user/signup", {
+				username: name,
 				email: email,
 				password: password,
 			})
 			.then(res => {
 				if (res.status === 200) {
-					window.sessionStorage.setItem("user", JSON.stringify(res.data));
-					setLogin();
-				}
-				if (props.isLogin === true) {
-					history.push("/timer");
-				} else {
-					history.push("/");
+					history.push("/signin");
 				}
 			})
 			.catch(err => {
-				if (err.response.status === 404) {
-					alert("E-mail 또는 Password를 확인해주세요😢️");
+				if (err.response.status === 409) {
+					alert("이미 가입된 사용자입니다🤯️");
 				} else {
-					alert("로그인에 실패하였습니다. 잠시 후 다시 시도해 주세요😢️");
+					alert("회원가입에 실패하였습니다. 잠시 후 다시 시도해 주세요😢️");
 				}
 			});
 	};
@@ -113,18 +174,32 @@ const SignIn = props => {
 		<>
 			{props.isLogin === false ? (
 				<Background>
-					<SLogo>
-						<img src={logo} alt="logo" width="230" height="50" />
-					</SLogo>
-
-					<Typography variant="h4" component="p">
-						Sign in to your account
-					</Typography>
-					<br />
+					<div>
+						<SLogo>
+							<img src={logo} alt="logo" width="230" height="50" />
+						</SLogo>
+						<Typography variant="h4" component="p">
+							Registration
+						</Typography>
+					</div>
 					<Wrap1>
 						<div>
 							<TextField
 								autoFocus
+								name="name"
+								type="name"
+								label="Nickname"
+								onKeyUp={inputName.onChange}
+								error={nameError === "" ? false : true}
+								helperText={nameError}
+								InputLabelProps={{
+									style: { color: "#808080" },
+								}}
+								inputProps={{ style: { color: "white" } }}
+							/>
+						</div>
+						<div>
+							<TextField
 								name="email"
 								type="email"
 								label="E-mail"
@@ -151,6 +226,20 @@ const SignIn = props => {
 								inputProps={{ style: { color: "white" } }}
 							/>
 						</div>
+						<div>
+							<TextField
+								name="password"
+								type="password"
+								label="Confirm Password"
+								onChange={inputCheckPW.onChange}
+								error={checkError === "" ? false : true}
+								helperText={checkError}
+								InputLabelProps={{
+									style: { color: "#808080" },
+								}}
+								inputProps={{ style: { color: "white" } }}
+							/>
+						</div>
 						<br />
 						<Wrap2>
 							<Button
@@ -160,30 +249,19 @@ const SignIn = props => {
 									borderRadius: 5,
 									backgroundColor: "#FFFFFF",
 									fontSize: "15px",
-									color: "rgba(30,30,30)",
-									border: "1px solid",
 									boxShadow: "0 3px 5px 2px rgba(30, 30, 30)",
 								}}
-								onClick={loginHandler}
-								disabled={(emailError || pwError) === "" ? false : true}
-								// emailError ,pwError
+								disabled={
+									(emailError || pwError || nameError || checkError) === ""
+										? false
+										: true
+								}
+								onClick={joinHandler}
 							>
-								ENTER
+								<b style={{ color: "rgba(30, 30, 30)", fontWeight: "bold" }}>
+									join!
+								</b>
 							</Button>
-							<Btn
-								variant="outlined"
-								onClick={() => history.push("/signup")}
-								style={{
-									borderRadius: 5,
-									// backgroundColor: "#FFFFFF",
-									border: "1px solid",
-									color: "white",
-									fontSize: "15px",
-									boxShadow: "0 3 0px 2px rgba(30, 30, 30)",
-								}}
-							>
-								JOIN
-							</Btn>
 						</Wrap2>
 					</Wrap1>
 				</Background>
@@ -205,18 +283,6 @@ const SignIn = props => {
 	);
 };
 
-const SLogo = styled.div`
-	position: relative;
-	overflow: hidden;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	/* border: 5px solid red; */
-	margin-bottom: 100px;
-	margin-top: 130px;
-	size: 10px;
-`;
-
 const Background = styled.div`
 	display: grid;
 	place-items: center;
@@ -224,36 +290,28 @@ const Background = styled.div`
 	width: 100%;
 `;
 
-const RandomBox = styled.div`
-	background-color: black;
-	height: 60%;
-`;
-
-const HeadTitle = styled(Typography)`
-	height: 40vh;
-`;
-
 const Wrap1 = styled.div`
 	width: clamp(23ch, 60%, 23ch);
 	height: 70vh;
-	margin-top: 40px;
 	display: flex;
+	margin-top: 30px;
 	flex-direction: column;
 `;
 
 const Wrap2 = styled.div`
-	/* height: 125px; */
-	/* width: 100%; */
-	display: inline-flex;
-	/* place-content: center; */
-	/* 버튼 두개가 나란히 있도록 */
+	height: 125px;
+	width: 100%;
+`;
+const SLogo = styled.div`
+	position: relative;
+	overflow: hidden;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	/* border: 5px solid red; */
+	margin-bottom: 70px;
+	margin-top: 100px;
+	size: 10px;
 `;
 
-const Locat = styled.div``;
-
-const Btn = styled(Button)`
-	flex-direction: row;
-	padding: 10px;
-`;
-
-export default SignIn;
+export default SignUp;
