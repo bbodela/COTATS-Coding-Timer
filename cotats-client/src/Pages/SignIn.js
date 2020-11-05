@@ -1,180 +1,208 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { withRouter, Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import axios from "axios";
 import { Typography, TextField, Button, Card } from "@material-ui/core";
 import logo from "../img/cotats_w_inner.png";
 
 axios.defaults.withCredentials = false;
 
-class SignIn extends Component {
-	state = {
-		email: "",
-		emailError: "",
-		password: "",
-		provider: "",
-	};
+const useMail = (inputValue, validator) => {
+	const [email, setEmail] = useState(inputValue);
+	const onChange = e => {
+		const {
+			target: { value },
+		} = e;
 
-	validateEmail = str => {
+		if (typeof validator === "function") {
+			setEmail(value);
+			validator(value);
+		}
+	};
+	return { email, onChange };
+};
+
+const usePassword = (inputValue, validator) => {
+	const [password, setPassword] = useState(inputValue);
+	const onChange = e => {
+		const {
+			target: { value },
+		} = e;
+
+		if (typeof validator === "function") {
+			setPassword(value);
+			validator(value);
+		}
+	};
+	return { password, onChange };
+};
+
+const SignIn = props => {
+	const [emailError, setEmailError] = useState("");
+	const [pwError, setPWError] = useState("");
+	let history = useHistory();
+	const validateEmail = str => {
 		let isError = false;
-		const errorText = {};
-		console.log("호출성공", str);
-		if (!str.includes("@")) {
+		let errorText = {};
+		let regExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+
+		if (!regExp.test(str)) {
 			isError = true;
-			errorText.emailError = "이메일을 입력해주세요";
+			errorText.emailError = "이메일을 입력하세요";
 		}
 		if (isError) {
-			//에러가있으면
-			this.setState({
-				email: str,
-				emailError: errorText.emailError,
-			});
+			setEmailError(errorText.emailError);
 		}
 		if (!isError) {
-			this.setState({
-				email: str,
-				emailError: "",
-			});
+			setEmailError("");
 		}
 	};
 
-	inputEmailChangeHandler = e => {
-		console.log("email내용", e.target.value);
-		let input = e.target.value;
-		const err = this.validateEmail(input);
+	const validatePW = pw => {
+		let isError = false;
+		let errorText = {};
+		let regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{6,10}$/; //  6 ~ 10자 영문, 숫자 조합
 
-		if (!err) {
-			this.setState({ email: input });
+		if (!regExp.test(pw)) {
+			isError = true;
+			errorText.pwLengthError = "영문, 숫자 조합으로 6~10자를 사용하세요";
+		}
+		if (isError) {
+			setPWError(errorText.pwLengthError);
+		}
+		if (!isError) {
+			setPWError("");
 		}
 	};
 
-	inputPwChangeHandler = e => {
-		this.setState({ password: e.target.value });
-	};
+	const inputMail = useMail("", validateEmail);
+	const inputPassword = usePassword("", validatePW);
 
-	/* 유효성 검사
-		email: email형식에 부합하도록
-		pw: 비밀번호는 6자 이상
-		무조건 입력을해야 버튼이 눌러지도록>> 입력값이없으면 일치하는 유저가없어서 어차피 서버응답이 에러
-			// 입력 폼 입력안되면 버튼눌려지지 않는 에러 추가
-	*/
-	loginHandler = () => {
-		// check for errors
-		const { email, password } = this.state;
-		const { setLogin } = this.props;
+	const loginHandler = () => {
+		const { email } = inputMail;
+		const { password } = inputPassword;
+		const { setLogin } = props;
+		console.log(email, password);
 		axios
 			.post("http://3.34.48.151:5000/user/signin", {
 				email: email,
 				password: password,
 			})
 			.then(res => {
-				console.log(res);
-				console.log("로그인 this.props 무엇?", this.props);
-				window.sessionStorage.setItem("user", JSON.stringify(res.data));
-				setLogin();
-				if (this.props.isLogin === true) {
-					this.props.history.push("/timer");
+				if (res.status === 200) {
+					window.sessionStorage.setItem("user", JSON.stringify(res.data));
+					setLogin();
+				}
+				if (props.isLogin === true) {
+					history.push("/timer");
 				} else {
-					this.props.history.push("/");
+					history.push("/");
 				}
 			})
-			.catch(err => console.log(err));
+			.catch(err => {
+				if (err.response.status === 404) {
+					alert("E-mail 또는 Password를 확인해주세요😢️");
+				} else {
+					alert("로그인에 실패하였습니다. 잠시 후 다시 시도해 주세요😢️");
+				}
+			});
 	};
 
-	render() {
-		return (
-			<>
-				{this.props.isLogin === false ? (
-					<Background>
-						<SLogo>
-							<img src={logo} alt="logo" width="230" height="50" />
-						</SLogo>
+	return (
+		<>
+			{props.isLogin === false ? (
+				<Background>
+					<SLogo>
+						<img src={logo} alt="logo" width="230" height="50" />
+					</SLogo>
 
-						<Typography variant="h4" component="p">
-							Sign in to your account
-						</Typography>
+					<Typography variant="h4" component="p">
+						Sign in to your account
+					</Typography>
+					<br />
+					<Wrap1>
+						<div>
+							<TextField
+								autoFocus
+								name="email"
+								type="email"
+								label="E-mail"
+								onChange={inputMail.onChange}
+								error={emailError === "" ? false : true}
+								helperText={emailError}
+								InputLabelProps={{
+									style: { color: "#808080" },
+								}}
+								inputProps={{ style: { color: "white" } }}
+							/>
+						</div>
+						<div>
+							<TextField
+								name="password"
+								type="password"
+								label="Password"
+								onChange={inputPassword.onChange}
+								error={pwError === "" ? false : true}
+								helperText={pwError}
+								InputLabelProps={{
+									style: { color: "#808080" },
+								}}
+								inputProps={{ style: { color: "white" } }}
+							/>
+						</div>
 						<br />
-						<Wrap1>
-							<div>
-								<TextField
-									autoFocus
-									name="email"
-									type="email"
-									label="E-mail"
-									onChange={email => this.inputEmailChangeHandler(email)}
-									error={this.state.emailError === "" ? false : true}
-									helperText={this.state.emailError}
-									InputLabelProps={{
-										style: { color: "#808080" },
-									}}
-									inputProps={{ style: { color: "white" } }}
-								/>
-							</div>
-							<div>
-								<TextField
-									name="password"
-									type="password"
-									label="Password"
-									onChange={pw => this.inputPwChangeHandler(pw)}
-									InputLabelProps={{
-										style: { color: "#808080" },
-									}}
-									inputProps={{ style: { color: "white" } }}
-								/>
-							</div>
-							<br />
-							<Wrap2>
-								<Button
-									variant="contained"
-									type="submit"
-									style={{
-										borderRadius: 5,
-										backgroundColor: "#FFFFFF",
-										fontSize: "15px",
-										color: "rgba(30,30,30)",
-										border: "1px solid",
-										boxShadow: "0 3px 5px 2px rgba(30, 30, 30)",
-									}}
-									onClick={() => this.loginHandler()}
-									disabled={!this.state.password}
-								>
-									ENTER
+						<Wrap2>
+							<Button
+								variant="contained"
+								type="submit"
+								style={{
+									borderRadius: 5,
+									backgroundColor: "#FFFFFF",
+									fontSize: "15px",
+									color: "rgba(30,30,30)",
+									border: "1px solid",
+									boxShadow: "0 3px 5px 2px rgba(30, 30, 30)",
+								}}
+								onClick={loginHandler}
+								disabled={(emailError || pwError) === "" ? false : true}
+								// emailError ,pwError
+							>
+								ENTER
+							</Button>
+							<Btn
+								variant="outlined"
+								onClick={() => history.push("/signup")}
+								style={{
+									borderRadius: 5,
+									// backgroundColor: "#FFFFFF",
+									border: "1px solid",
+									color: "white",
+									fontSize: "15px",
+									boxShadow: "0 3 0px 2px rgba(30, 30, 30)",
+								}}
+							>
+								JOIN
+							</Btn>
+						</Wrap2>
+					</Wrap1>
+				</Background>
+			) : (
+				<Background>
+					<Wrap1>
+						<Wrap2>
+							<h3>로그인되어 있습니다</h3>
+							<Redirect to="/timer">
+								<Button variant="outlined" color="primary">
+									💻️코딩하러 갈까요?💻️
 								</Button>
-								<Btn
-									variant="outlined"
-									onClick={() => this.props.history.push("/signup")}
-									style={{
-										borderRadius: 5,
-										// backgroundColor: "#FFFFFF",
-										border: "1px solid",
-										color: "white",
-										fontSize: "15px",
-										boxShadow: "0 3 0px 2px rgba(30, 30, 30)",
-									}}
-								>
-									JOIN
-								</Btn>
-							</Wrap2>
-						</Wrap1>
-					</Background>
-				) : (
-					<Background>
-						<Wrap1>
-							<Wrap2>
-								<h3>로그인되어 있습니다</h3>
-								<Redirect to="/timer">
-									<Button variant="outlined" color="primary">
-										💻️코딩하러 갈까요?💻️
-									</Button>
-								</Redirect>
-							</Wrap2>
-						</Wrap1>
-					</Background>
-				)}
-			</>
-		);
-	}
-}
+							</Redirect>
+						</Wrap2>
+					</Wrap1>
+				</Background>
+			)}
+		</>
+	);
+};
 
 const SLogo = styled.div`
 	position: relative;
@@ -227,4 +255,4 @@ const Btn = styled(Button)`
 	padding: 10px;
 `;
 
-export default withRouter(SignIn);
+export default SignIn;
