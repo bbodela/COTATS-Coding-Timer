@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Route, Redirect } from "react-router-dom";
 import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
-// import theme from "../theme";
 
 import Home from "Pages/Home";
 import SignIn from "Pages/SignIn";
@@ -51,6 +50,7 @@ const App = () => {
 							setLogin={login}
 							setLogout={logout}
 							themeController={themeController}
+							theme={theme}
 						/>
 						<Route
 							exact

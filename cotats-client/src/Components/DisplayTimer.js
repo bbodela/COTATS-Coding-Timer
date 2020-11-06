@@ -23,7 +23,6 @@ const DisplayTimer = props => {
 export default DisplayTimer;
 const Timenumber = styled.span`
 	top: 60%;
-	color: white;
 	font-size: 150px;
 	top: 50%;
 	font-family: "Nanum Gothic", sans-serif !important;
@@ -32,7 +31,6 @@ const Timenumber = styled.span`
 	letter-spacing: -5px;
 `;
 const Ms = styled.span`
-	color: white;
 	font-family: "Nanum Gothic", sans-serif !important;
 	font-weight: bolder;
 `;

@@ -116,7 +116,6 @@ const SignIn = props => {
 					<SLogo>
 						<img src={logo} alt="logo" width="230" height="50" />
 					</SLogo>
-
 					<Typography variant="h4" component="p">
 						Sign in to your account
 					</Typography>
