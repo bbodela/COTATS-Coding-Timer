@@ -5,7 +5,7 @@ import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 
 import Home from "Pages/Home";
 import SignIn from "Pages/SignIn";
-import SignUp from "Pages/SignUp_";
+import SignUp from "Pages/SignUp";
 import Timer from "Pages/Timer";
 import Header from "Components/Header";
 
@@ -52,7 +52,11 @@ const App = () => {
 							setLogout={logout}
 							themeController={themeController}
 						/>
-						<Route exact path="/" render={() => <Home isLogin={status} />} />
+						<Route
+							exact
+							path="/"
+							render={() => <Home isLogin={status} theme={theme} />}
+						/>
 						<Route
 							path="/signin"
 							render={() => <SignIn isLogin={status} setLogin={login} />}
@@ -72,7 +76,7 @@ const GlobalStyle = createGlobalStyle`
 		background-color: ${props =>
 			props.theme.mode === "dark" ? "#212121" : "#EEE"};
 		color: ${props => (props.theme.mode === "dark" ? "#EEE" : "#212121")};
-
+		
     margin: 0;
     padding: 0;
 		height: 100%;

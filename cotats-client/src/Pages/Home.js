@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-import logo from "../img/cotats_w_inner.png";
+import darkModeLogo from "../img/cotats_w_inner.png";
+import lightModeLogo from "../img/cotats_b_outer2.png";
 
 import { Link } from "react-router-dom";
 
@@ -10,14 +11,20 @@ const Home = props => {
 			{props.isLogin === false ? (
 				<Container>
 					<SLogo>
-						<img src={logo} alt="logo" />
+						<img
+							src={props.theme.mode === "dark" ? darkModeLogo : lightModeLogo}
+							alt="logo"
+						/>
 					</SLogo>
 				</Container>
 			) : (
 				// 공부화면으로 갈 수 있는 버튼 링크
 				<Container>
 					<LogoLink to="/timer">
-						<img src={logo} alt="logo" />
+						<img
+							src={props.theme.mode === "dark" ? darkModeLogo : lightModeLogo}
+							alt="logo"
+						/>
 					</LogoLink>
 				</Container>
 			)}
@@ -27,7 +34,7 @@ const Home = props => {
 
 const Container = styled.div`
 	height: 100vh;
-	background-color: #212121;
+	/* background-color: #212121; */
 	display: flex;
 	justify-content: center;
 	align-items: center;
