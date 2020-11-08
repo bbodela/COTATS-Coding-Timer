@@ -10,22 +10,24 @@ const Home = props => {
 		<>
 			{props.isLogin === false ? (
 				<Container>
-					<SLogo>
+					<Logo>
 						<img
 							src={props.theme.mode === "dark" ? darkModeLogo : lightModeLogo}
 							alt="logo"
 						/>
-					</SLogo>
+					</Logo>
 				</Container>
 			) : (
 				// 공부화면으로 갈 수 있는 버튼 링크
 				<Container>
-					<LogoLink to="/timer">
-						<img
-							src={props.theme.mode === "dark" ? darkModeLogo : lightModeLogo}
-							alt="logo"
-						/>
-					</LogoLink>
+					<Logo>
+						<Link to="/timer">
+							<img
+								src={props.theme.mode === "dark" ? darkModeLogo : lightModeLogo}
+								alt="logo"
+							/>
+						</Link>
+					</Logo>
 				</Container>
 			)}
 		</>
@@ -34,31 +36,15 @@ const Home = props => {
 
 const Container = styled.div`
 	height: 100vh;
-	/* background-color: #212121; */
+	width: 100%;
 	display: flex;
+	flex-direction: column;
 	justify-content: center;
-	align-items: center;
-	min-height: 100vh;
-	margin: 0;
-	& * {
-		font-family: "Source Sans Pro";
-	}
 `;
-
-const SLogo = styled.div`
-	position: relative;
-	overflow: hidden;
+const Logo = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-`;
-
-const LogoLink = styled(Link)`
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	position: relative;
-	overflow: hidden;
 `;
 
 export default Home;

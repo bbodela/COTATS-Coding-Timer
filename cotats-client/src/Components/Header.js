@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import styled, { keyframes } from "styled-components";
 import { Link, withRouter } from "react-router-dom";
-import { List } from "@material-ui/core";
+import styled, { keyframes } from "styled-components";
 import axios from "axios";
 import logo from "../img/cotats_g_inner.png";
-import Hamburger from "Components/Hamburger";
+import hamburger_w from "../img/hamburger_w.png";
+import hamburger_b from "../img/hamburger_b.png";
 
 const Header = props => {
-	const [menuStatus, setMenuStatus] = useState(false); //menustatus = false
 	const logoutHandler = () => {
 		axios
 			.post("http://3.34.48.151:5000/user/signout")
@@ -20,69 +19,107 @@ const Header = props => {
 				console.log(err);
 			});
 	};
-	const open = () => {
-		setMenuStatus(false);
-	};
-	const close = () => {
-		// refresh();
-		setMenuStatus(true);
-	};
 
 	return (
 		<>
 			{props.isLogin === false ? (
-				<HeaderContainer>
-					<MenuBtn>
-						<Anchor to="/signin">
-							<Stext>Sign In</Stext>
-						</Anchor>
-						<Anchor to="/signup">
-							<Stext>JOIN</Stext>
-						</Anchor>
-					</MenuBtn>
-					<button onClick={props.themeController}>Toggle Theme</button>
-				</HeaderContainer>
+				<Container>
+					<NaviLinks>
+						<Sign_ to="/signin">Sign in</Sign_>
+						<Sign_ to="/signup">Join</Sign_>
+					</NaviLinks>
+					<ToggleBtn onClick={props.themeController}>
+						{props.theme.mode === "dark" ? "Light" : "Dark"} mode
+					</ToggleBtn>
+				</Container>
 			) : (
-				<HeaderContainer>
-					<BlinkingLogo>
-						<Anchor to="/">
-							<img src={logo} width="100" height="25" alt="logo" />
-						</Anchor>
-					</BlinkingLogo>
-					<MenuBtn>
-						<Anchor to="/" onClick={() => logoutHandler()}>
-							<Stext>Sign Out</Stext>
-						</Anchor>
-						<Hamburger
-							IsLogin={props.IsLogin}
-							open={open}
-							close={close}
-							status={menuStatus}
-						>
-							test
-						</Hamburger>
-					</MenuBtn>
-					<button onClick={props.themeController}>Toggle Theme</button>
-				</HeaderContainer>
+				<MemberContainer>
+					<MemberNavi>
+						<Link to="/">
+							<BlinkingLogo>
+								<img src={logo} width="80" height="16" alt="logo" />
+							</BlinkingLogo>
+						</Link>
+						<div>
+							<MemberNaviLinks>
+								<Sign_ to="/" onClick={logoutHandler}>
+									Sign Out
+								</Sign_>
+
+								<ToggleBtn onClick={props.themeController}>
+									{props.theme.mode === "dark" ? "Light" : "Dark"} mode
+								</ToggleBtn>
+							</MemberNaviLinks>
+						</div>
+					</MemberNavi>
+					<div>
+						<img
+							src={props.theme.mode === "dark" ? hamburger_w : hamburger_b}
+							alt="logo"
+							onClick={props.close}
+							width="30"
+							height="23"
+							style={{ cursor: "pointer" }}
+						/>
+					</div>
+				</MemberContainer>
 			)}
 		</>
 	);
 };
-const HeaderContainer = styled.div`
+
+const Container = styled.section`
+	width: 100%;
+	height: 25px;
 	display: flex;
-	flex-direction: column;
-	justify-content: center;
+	justify-content: space-around;
 	align-items: center;
-	padding: 5px 10px;
-	.logo {
-		padding: 15px 0 10px 15px;
-	}
-	@media screen and (max-width: 600px) {
+	padding: 8px 16px;
+
+	@media screen and (max-width: 414px) {
+		height: 45px;
+		display: flex;
 		flex-direction: column;
-		align-content: flex-start;
-		padding-top: 10px;
-		padding-left: 0;
-		padding-right: 0;
+		justify-content: space-between;
+		padding: 8px 16px;
+	}
+`;
+const NaviLinks = styled.div`
+	align-items: center;
+`;
+const MemberContainer = styled.section`
+	width: 100%;
+	height: 25px;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	padding: 8px 16px;
+
+	@media screen and (max-width: 414px) {
+		height: 45px;
+		display: flex;
+		padding: 8px 16px;
+		justify-content: space-between;
+		align-items: center;
+	}
+`;
+
+const MemberNavi = styled.div`
+	display: flex;
+	@media screen and (max-width: 414px) {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+`;
+const MemberNaviLinks = styled.div`
+	display: flex;
+
+	@media screen and (max-width: 414px) {
+		align-content: center;
+		display: flex;
+		flex-direction: row;
+		padding: 0px 10px;
 	}
 `;
 const blink = keyframes`
@@ -94,38 +131,29 @@ const BlinkingLogo = styled.div`
 	animation: ${blink} 1s linear infinite;
 	text-decoration: none;
 `;
-const Anchor = styled(Link)`
+const Sign_ = styled(Link)`
+	padding: 0px 10px;
 	text-decoration: none;
-`;
-const Stext = styled.a`
-	color: whitesmoke;
-	font-size: 20px;
-	padding-top: 10px;
-	padding: 15px;
-	&:hover {
-		font-size: 140%;
-		color: lightslategrey;
-	}
-	&:link {
-		color: white;
-	}
+
+	&:link,
 	&:visited {
-		color: white;
-		text-decoration: none;
+		color: ${props => (props.theme.mode === "dark" ? "#7a7a7a" : "#696969")};
+	}
+	&:hover {
+		color: ${props => (props.theme.mode === "dark" ? "#f8f9fa" : "#212121")};
+	}
+	&:active {
+		color: #99ff00;
 	}
 `;
-const MenuBtn = styled.div`
-	display: flex;
-	padding-left: 0;
-	@media screen and (max-width: 600px) {
-		flex-direction: column;
+const ToggleBtn = styled.div`
+	padding: 0 16px;
+	border-radius: 5px;
+	box-shadow: 2px 2px 2px #dadada;
+
+	&:active {
+		transform: translateY(4px);
 	}
-`;
-const RecordList = styled.ul`
-	list-style: none;
 `;
 
-const SList = styled(List)`
-	background-color: #212121;
-`;
 export default withRouter(Header);

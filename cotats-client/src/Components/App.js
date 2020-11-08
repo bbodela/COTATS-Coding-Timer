@@ -7,6 +7,33 @@ import SignIn from "Pages/SignIn";
 import SignUp from "Pages/SignUp";
 import Timer from "Pages/Timer";
 import Header from "Components/Header";
+import Footer from "Components/Footer";
+
+const GlobalStyle = createGlobalStyle`
+  body {
+		@font-face {
+			font-family: 'GmarketSansMedium';
+			src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+			font-weight: normal;
+			font-style: normal;
+		}
+
+		background-color: ${props =>
+			props.theme.mode === "dark" ? "#212121" : "#f8f9fa"};
+		color: ${props => (props.theme.mode === "dark" ? "#f8f9fa" : "#212121")};
+
+		font-family: "GmarketSansMedium";
+		font-size: 12px;
+
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		
+		box-sizing: border-box;
+	}
+`;
 
 const getInitialTheme = () => {
 	const initialTheme = window.localStorage.getItem("theme");
@@ -16,6 +43,7 @@ const getInitialTheme = () => {
 const App = () => {
 	const [status, setStatus] = useState(false);
 	const [theme, setTheme] = useState(getInitialTheme);
+	const [menuStatus, setMenuStatus] = useState(false);
 
 	const login = () => {
 		setStatus(true);
@@ -28,6 +56,13 @@ const App = () => {
 
 	const themeController = e => {
 		setTheme(theme.mode === "dark" ? { mode: "light" } : { mode: "dark" });
+	};
+
+	const open = () => {
+		setMenuStatus(false);
+	};
+	const close = () => {
+		setMenuStatus(true);
 	};
 
 	useEffect(() => {
@@ -43,7 +78,7 @@ const App = () => {
 		<ThemeProvider theme={theme}>
 			<>
 				<GlobalStyle />
-				<Container className="App__container">
+				<div>
 					<BrowserRouter>
 						<Header
 							isLogin={status}
@@ -51,6 +86,9 @@ const App = () => {
 							setLogout={logout}
 							themeController={themeController}
 							theme={theme}
+							open={open}
+							close={close}
+							status={menuStatus}
 						/>
 						<Route
 							exact
@@ -59,38 +97,33 @@ const App = () => {
 						/>
 						<Route
 							path="/signin"
-							render={() => <SignIn isLogin={status} setLogin={login} />}
+							render={() => (
+								<SignIn theme={theme} isLogin={status} setLogin={login} />
+							)}
 						/>
-						<Route path="/signup" render={() => <SignUp isLogin={status} />} />
-						<Route path="/timer" render={() => <Timer isLogin={status} />} />
+						<Route
+							path="/signup"
+							render={() => <SignUp theme={theme} isLogin={status} />}
+						/>
+						<Route
+							path="/timer"
+							render={() => (
+								<Timer
+									isLogin={status}
+									open={open}
+									close={close}
+									status={menuStatus}
+									theme={theme}
+								/>
+							)}
+						/>
+						<Footer theme={theme} />
 						<Redirect from="*" to="/timer" />
 					</BrowserRouter>
-				</Container>
+				</div>
 			</>
 		</ThemeProvider>
 	);
 };
-
-const GlobalStyle = createGlobalStyle`
-  body {
-		background-color: ${props =>
-			props.theme.mode === "dark" ? "#212121" : "#EEE"};
-		color: ${props => (props.theme.mode === "dark" ? "#EEE" : "#212121")};
-		
-    margin: 0;
-    padding: 0;
-		height: 100%;
-		width: 100%;
-	}
-`;
-
-const Container = styled.div`
-	/* background-color: #212121;
-	color: white; */
-	& * {
-		box-sizing: border-box;
-		font-family: "Source Sans Pro";
-	}
-`;
 
 export default App;

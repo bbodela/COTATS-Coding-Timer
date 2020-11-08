@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Redirect, useHistory } from "react-router-dom";
 import axios from "axios";
-import { Typography, TextField, Button, Card } from "@material-ui/core";
-import logo from "../img/cotats_w_inner.png";
+import { TextField } from "@material-ui/core";
+import darkModeLogo from "../img/cotats_w_inner.png";
+import lightModeLogo from "../img/cotats_b_outer2.png";
 
 axios.defaults.withCredentials = false;
 
@@ -40,6 +41,7 @@ const usePassword = (inputValue, validator) => {
 const SignIn = props => {
 	const [emailError, setEmailError] = useState("");
 	const [pwError, setPWError] = useState("");
+	const [isValid, setValid] = useState(false);
 	let history = useHistory();
 
 	const validateEmail = str => {
@@ -47,15 +49,21 @@ const SignIn = props => {
 		let errorText = {};
 		let regExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
 
-		if (!regExp.test(str)) {
-			isError = true;
-			errorText.emailError = "이메일을 입력하세요";
-		}
-		if (isError) {
-			setEmailError(errorText.emailError);
-		}
-		if (!isError) {
-			setEmailError("");
+		if (str !== "") {
+			if (!regExp.test(str)) {
+				isError = true;
+				errorText.emailError = "이메일을 입력하세요";
+			} else {
+				isError = false;
+			}
+			if (isError) {
+				setEmailError(errorText.emailError);
+				setValid(false);
+			}
+			if (!isError) {
+				setEmailError("");
+				setInterval(() => validInputs(emailError, pwError), 1000);
+			}
 		}
 	};
 
@@ -63,27 +71,46 @@ const SignIn = props => {
 		let isError = false;
 		let errorText = {};
 		let regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{6,10}$/; //  6 ~ 10자 영문, 숫자 조합
-
-		if (!regExp.test(pw)) {
-			isError = true;
-			errorText.pwLengthError = "영문, 숫자 조합으로 6~10자를 사용하세요";
-		}
-		if (isError) {
-			setPWError(errorText.pwLengthError);
-		}
-		if (!isError) {
-			setPWError("");
+		if (pw !== "") {
+			if (!regExp.test(pw)) {
+				isError = true;
+				errorText.pwLengthError = "영문, 숫자 조합으로 6~10자를 사용하세요";
+			} else {
+				isError = false;
+			}
+			if (isError) {
+				setPWError(errorText.pwLengthError);
+				setValid(false);
+			}
+			if (!isError) {
+				setPWError("");
+				setInterval(() => validInputs(emailError, pwError), 1000);
+			}
 		}
 	};
 
+	const validInputs = (e, p) => {
+		if (p !== "" && e === "") {
+			return setValid(false);
+		}
+		if (p === "" && e !== "") {
+			return setValid(false);
+		}
+		if (e === "" && p === "") {
+			return setValid(true);
+		}
+	};
 	const inputMail = useMail("", validateEmail);
 	const inputPassword = usePassword("", validatePW);
 
+	const goHome = () => {
+		history.push("/");
+	};
 	const loginHandler = () => {
 		const { email } = inputMail;
 		const { password } = inputPassword;
 		const { setLogin } = props;
-		console.log(email, password);
+
 		axios
 			.post("http://3.34.48.151:5000/user/signin", {
 				email: email,
@@ -112,147 +139,111 @@ const SignIn = props => {
 	return (
 		<>
 			{props.isLogin === false ? (
-				<Background>
-					<SLogo>
-						<img src={logo} alt="logo" width="230" height="50" />
-					</SLogo>
-					<Typography variant="h4" component="p">
-						Sign in to your account
-					</Typography>
-					<br />
-					<Wrap1>
-						<div>
-							<TextField
-								autoFocus
-								name="email"
-								type="email"
-								label="E-mail"
-								onChange={inputMail.onChange}
-								error={emailError === "" ? false : true}
-								helperText={emailError}
-								InputLabelProps={{
-									style: { color: "#808080" },
-								}}
-								inputProps={{ style: { color: "white" } }}
-							/>
-						</div>
-						<div>
-							<TextField
-								name="password"
-								type="password"
-								label="Password"
-								onChange={inputPassword.onChange}
-								error={pwError === "" ? false : true}
-								helperText={pwError}
-								InputLabelProps={{
-									style: { color: "#808080" },
-								}}
-								inputProps={{ style: { color: "white" } }}
-							/>
-						</div>
+				<Container>
+					<Title>
+						👻️
 						<br />
-						<Wrap2>
-							<Button
-								variant="contained"
-								type="submit"
-								style={{
-									borderRadius: 5,
-									backgroundColor: "#FFFFFF",
-									fontSize: "15px",
-									color: "rgba(30,30,30)",
-									border: "1px solid",
-									boxShadow: "0 3px 5px 2px rgba(30, 30, 30)",
-								}}
-								onClick={loginHandler}
-								disabled={(emailError || pwError) === "" ? false : true}
-								// emailError ,pwError
-							>
-								ENTER
-							</Button>
-							<Btn
-								variant="outlined"
-								onClick={() => history.push("/signup")}
-								style={{
-									borderRadius: 5,
-									// backgroundColor: "#FFFFFF",
-									border: "1px solid",
-									color: "white",
-									fontSize: "15px",
-									boxShadow: "0 3 0px 2px rgba(30, 30, 30)",
-								}}
-							>
-								JOIN
-							</Btn>
-						</Wrap2>
-					</Wrap1>
-				</Background>
+						Sign In to your account
+					</Title>
+					<Contents>
+						<div>
+							<img
+								src={props.theme.mode === "dark" ? darkModeLogo : lightModeLogo}
+								alt="logo"
+								onClick={goHome}
+								width="270"
+								height="70"
+							/>
+						</div>
+						<div>
+							<div>
+								<div>
+									<TextField
+										autoFocus
+										name="email"
+										type="email"
+										label="E-mail"
+										onChange={inputMail.onChange}
+										error={emailError === "" ? false : true}
+										helperText={emailError}
+										InputLabelProps={{
+											style: { color: "#7a7a7a" },
+										}}
+										inputProps={{ style: { color: "#7a7a7a" } }}
+									/>
+								</div>
+								<div>
+									<TextField
+										name="password"
+										type="password"
+										label="Password"
+										onChange={inputPassword.onChange}
+										error={pwError === "" ? false : true}
+										helperText={pwError}
+										InputLabelProps={{
+											style: { color: "#808080" },
+										}}
+										inputProps={{ style: { color: "#7a7a7a" } }}
+									/>
+								</div>
+								<br />
+								<div>
+									<Buttons
+										type="submit"
+										onClick={loginHandler}
+										disabled={isValid ? false : true}
+									>
+										ENTER
+									</Buttons>
+									<Buttons onClick={() => history.push("/signup")}>
+										JOIN
+									</Buttons>
+								</div>
+							</div>
+						</div>
+					</Contents>
+				</Container>
 			) : (
-				<Background>
-					<Wrap1>
-						<Wrap2>
-							<h3>로그인되어 있습니다</h3>
-							<Redirect to="/timer">
-								<Button variant="outlined" color="primary">
-									💻️코딩하러 갈까요?💻️
-								</Button>
-							</Redirect>
-						</Wrap2>
-					</Wrap1>
-				</Background>
+				<Container>
+					<Contents>
+						<h3>로그인되어 있습니다</h3>
+						<Redirect to="/timer">
+							<button>💻️코딩하러 갈까요?💻️</button>
+						</Redirect>
+					</Contents>
+				</Container>
 			)}
 		</>
 	);
 };
 
-const SLogo = styled.div`
-	position: relative;
-	overflow: hidden;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	/* border: 5px solid red; */
-	margin-bottom: 100px;
-	margin-top: 130px;
-	size: 10px;
-`;
-
-const Background = styled.div`
-	display: grid;
-	place-items: center;
+const Container = styled.div`
 	height: 100vh;
 	width: 100%;
-`;
-
-const RandomBox = styled.div`
-	background-color: black;
-	height: 60%;
-`;
-
-const HeadTitle = styled(Typography)`
-	height: 40vh;
-`;
-
-const Wrap1 = styled.div`
-	width: clamp(23ch, 60%, 23ch);
-	height: 70vh;
-	margin-top: 40px;
 	display: flex;
 	flex-direction: column;
 `;
-
-const Wrap2 = styled.div`
-	/* height: 125px; */
-	/* width: 100%; */
-	display: inline-flex;
-	/* place-content: center; */
-	/* 버튼 두개가 나란히 있도록 */
+const Title = styled.p`
+	margin: 0;
+	padding: 40px 0 100px 0;
+	text-align: center;
+	font-size: 300%;
+`;
+const Contents = styled.div`
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
 `;
 
-const Locat = styled.div``;
-
-const Btn = styled(Button)`
-	flex-direction: row;
-	padding: 10px;
+const Buttons = styled.button`
+	border-radius: 5px;
+	padding: 4px 16px;
+	margin: 10px;
+	background-color: #f8f9fa;
+	font-size: 15px;
+	color: rgba(30, 30, 30);
+	border: 1px solid;
+	box-shadow: 0 2px 3px 1px rgba(30, 30, 30);
 `;
 
 export default SignIn;

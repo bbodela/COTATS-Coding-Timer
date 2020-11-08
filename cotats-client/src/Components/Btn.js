@@ -1,60 +1,25 @@
-import React, { Fragment } from "react";
-import { Button } from "@material-ui/core";
-import styled, { createGlobalStyle } from "styled-components";
-import { withStyles } from "@material-ui/core/styles";
-import { lightBlue } from "@material-ui/core/colors";
+import React from "react";
+import styled from "styled-components";
 
 const Btn = props => {
 	return (
 		<div className="Btn">
 			{props.status === 0 || props.status === 2 ? (
-				<StartButton
-					className="start"
-					onClick={props.start}
-					style={{
-						width: 170,
-						height: 70,
-						color: "grey",
-						fontWeight: "bolder",
-						fontSize: 20,
-					}}
-				>
+				<Buttons className="start" onClick={props.start}>
 					<b>START</b>
-				</StartButton>
+				</Buttons>
 			) : (
 				""
 			)}
 			{props.status === 1 ? (
-				<Fragment>
-					<PauseButton
-						className="start"
-						onClick={props.pause}
-						style={{
-							width: 170,
-							height: 70,
-							color: "grey",
-							fontWeight: "bolder",
-							fontSize: 20,
-							marginRight: 30,
-						}}
-					>
+				<>
+					<Buttons className="start" onClick={props.pause}>
 						<b>PAUSE</b>
-					</PauseButton>
-					<StopButton
-						className="start"
-						onClick={props.stop}
-						style={{
-							width: 170,
-							height: 70,
-							color: "grey",
-							fontWeight: "bolder",
-							fontSize: 20,
-							marginLeft: 30,
-						}}
-					>
+					</Buttons>
+					<Buttons className="start" onClick={props.stop}>
 						<b>STOP</b>
-					</StopButton>
-				</Fragment>
+					</Buttons>
+				</>
 			) : (
 				""
 			)}
@@ -64,44 +29,15 @@ const Btn = props => {
 
 export default Btn;
 
-const GlobalStyles = createGlobalStyle`
-      body {
-        @import url("https://fonts.googleapis.com/css");
-        font-family: "Nanum Gothic", sans-serif !important;
-      }
-    `;
-const StartButton = withStyles({
-	root: {
-		borderRadius: 20,
-		border: 0,
-		height: 48,
-		padding: "0 30px",
-		boxShadow: "0 3px 5px 2px rgba(92, 108, 189)",
-		fontsize: 50,
-		color: lightBlue,
-	},
-})(Button);
-
-const PauseButton = withStyles({
-	root: {
-		borderRadius: 20,
-		border: 0,
-		height: 48,
-		padding: "0 30px",
-		boxShadow: "0 3px 5px 2px rgba(92, 108, 189)",
-		fontsize: 50,
-		color: lightBlue,
-	},
-})(Button);
-
-const StopButton = withStyles({
-	root: {
-		borderRadius: 20,
-		border: 0,
-		height: 48,
-		padding: "0 30px",
-		boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
-		fontsize: 50,
-		color: lightBlue,
-	},
-})(Button);
+const Buttons = styled.button`
+	width: 150px;
+	height: 50px;
+	border-radius: 10px;
+	color: #7a7a7a;
+	font-weight: bolder;
+	font-size: 20px;
+	margin-left: 30px;
+	&:active {
+		transform: translateY(4px);
+	}
+`;
