@@ -47,9 +47,7 @@ const Footer = props => {
 		window.open("https://github.com/bbodela/COTATS-Coding-Timer");
 	};
 	const onClickLink = () => {
-		window.open(
-			"http://cotats-client-mine.s3-website.ap-northeast-2.amazonaws.com"
-		);
+		window.open("https://d3dmm6z4idulob.cloudfront.net");
 	};
 	const onClickCotats = () => {
 		history.push("/");

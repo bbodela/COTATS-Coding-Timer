@@ -11,7 +11,7 @@ const Header = props => {
 		axios
 			.post("http://3.34.48.151:5000/user/signout")
 			.then(res => {
-				console.log("헤더signout버튼클릭 시 res", res);
+				// console.log("헤더signout버튼클릭 시 res", res);
 				props.setLogout();
 				props.history.push("/");
 			})
