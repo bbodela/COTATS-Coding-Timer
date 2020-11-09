@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link, withRouter } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import axios from "axios";
@@ -25,8 +25,8 @@ const Header = props => {
 			{props.isLogin === false ? (
 				<Container>
 					<NaviLinks>
-						<Sign_ to="/signin">Sign in</Sign_>
-						<Sign_ to="/signup">Join</Sign_>
+						<LinkStyle to="/signin">Sign in</LinkStyle>
+						<LinkStyle to="/signup">Join</LinkStyle>
 					</NaviLinks>
 					<ToggleBtn onClick={props.themeController}>
 						{props.theme.mode === "dark" ? "Light" : "Dark"} mode
@@ -42,9 +42,9 @@ const Header = props => {
 						</Link>
 						<div>
 							<MemberNaviLinks>
-								<Sign_ to="/" onClick={logoutHandler}>
+								<LinkStyle to="/" onClick={logoutHandler}>
 									Sign Out
-								</Sign_>
+								</LinkStyle>
 
 								<ToggleBtn onClick={props.themeController}>
 									{props.theme.mode === "dark" ? "Light" : "Dark"} mode
@@ -131,7 +131,7 @@ const BlinkingLogo = styled.div`
 	animation: ${blink} 1s linear infinite;
 	text-decoration: none;
 `;
-const Sign_ = styled(Link)`
+const LinkStyle = styled(Link)`
 	padding: 0px 10px;
 	text-decoration: none;
 
